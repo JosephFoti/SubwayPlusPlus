@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>
+    <%= stop %>
+  </title>
+</head>
+
+<body>
+  <ul>
+    <h2>Northbound</h2>
+    <% for (let i=0;i<3;i++) { %>
+      <% var train = station[0]['data'][i] %>
+      <li>
+        <strong style="margin:20px;"><%= train['routeId'] %></strong>
+        <span class="est" data-index=<%= i %>><%= station[0]['est'][i] %> Minutes</span>
+      </li>
+    <% } %>
+
+  </ul>
+
+  <ul>
+    <h2>Southbound</h2>
+    <% for (let i=0;i<3;i++) { %>
+      <% var train = station[1]['data'][i] %>
+      <li>
+        <strong style="margin:20px;"><%= train['routeId'] %></strong>
+        <span class="est" data-index=<%= i %>><%= station[1]['est'][i] %> Minutes</span>
+      </li>
+    <% } %>
+  </ul>
+
+</body>
+
+</html>

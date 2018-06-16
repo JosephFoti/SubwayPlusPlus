@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Subway++ | Take less time to get your times</title>
+    <link rel="stylesheet" href="/css/master.css">
+  </head>
+  <body>
+
+    <h1>Subway++</h1>
+    <h4>Your one stop for all of your subway time needs</h4>
+    <hr/>
+
+    <h2>Lines</h2>
+    <% for (line of lineNames) { %>
+      <a href=<%= `/lines/${line}`%> ><div class="lineName" data-line=<%= line %>><%= line %></div></a>
+    <% } %>
+
+  </body>
+</html>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title><%= line %> Line</title>
+</head>
+
+<body>
+  <h2 class="lineTitle"><%= line %></h2>
+  <div class="lineWrap" data-line=<%= line %>>
+    <h3 class="title" style="text-align:center;"><%= line %> contains <%= stops.length %> stops </h1>
+  </div>
+  <% for (let stop of stops) { %>
+    <a href=<%=`/stops/${stop[0]}&${feedId}`%>><li class='stop'><%= stop[1] %></li></a>
+  <% } %>
+</body>
+
+</html>
