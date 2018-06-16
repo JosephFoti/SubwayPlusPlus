@@ -9,10 +9,13 @@
 </head>
 
 <body>
+  
   <ul>
     <h2>Northbound</h2>
-    <% for (let i=0;i<3;i++) { %>
+    <% for (let i=0;i<station[1]['est'].length;i++) { %>
       <% var train = station[0]['data'][i] %>
+      <% if (!train) continue %>
+
       <li>
         <strong style="margin:20px;"><%= train['routeId'] %></strong>
         <span class="est" data-index=<%= i %>><%= station[0]['est'][i] %> Minutes</span>
@@ -23,8 +26,10 @@
 
   <ul>
     <h2>Southbound</h2>
-    <% for (let i=0;i<3;i++) { %>
+    <% for (let i=0;i<station[1]['est'].length;i++) { %>
       <% var train = station[1]['data'][i] %>
+      <% if (!train) continue %>
+
       <li>
         <strong style="margin:20px;"><%= train['routeId'] %></strong>
         <span class="est" data-index=<%= i %>><%= station[1]['est'][i] %> Minutes</span>

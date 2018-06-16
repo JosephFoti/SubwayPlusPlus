@@ -5,23 +5,107 @@ const http = require('http');
 const fs = require('fs');
 const express = require('express');
 const bodyParser = require('body-parser');
-// const lineParse = require('./sbw_Line-parse');
+const Sequelize = require('sequelize')
+const passport = require('passport');
+const Strategy = require('passport-local').Strategy;
+const cookieParser = require('cookie-parser');
+
 const app = express();
 
-// let linesCheck = setInterval(function(){
-//   if(lineParse.lines) {
-//     console.log('-=-=-=-=-=-=- got lines! -=-=-=-=-=-=-');
-//     console.log(lineParse.lines[0][0][1]['stop_name']);
-//     clearInterval(linesCheck);
-//   }
-// },150)
+const stopFetch = require('./components/stopFetch.js');
+const getFeed = require('./components/getFeed.js');
 
-app.set('view engine', 'ejs')
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({
-  extended: false
-}))
-app.use(express.static('public'))
+app.set('view engine', 'ejs');
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(express.static('public'));
+
+
+
+const Op = Sequelize.Op
+// const sequelize = new Sequelize('barkspace', postgres_user, postgres_pass, {
+const sequelize = new Sequelize('barkspace', 'postgres', 'Giraffes94', {
+
+	// host: 'localhost',
+	// port: '5432',
+	dialect: 'postgres',
+	operatorsAliases:{
+		$and: Op.and,
+		$or: Op.or,
+		$eq: Op.eq,
+		$regexp: Op.regexp,
+		$iRegexp: Op.iRegexp,
+		$like: Op.like,
+		$iLike: Op.iLike
+	}
+})
+
+
+//____________________________________CREATE A TABLE
+
+const User = sequelize.define('user',
+  {
+
+	username: Sequelize.STRING,
+	email: Sequelize.STRING,
+	password: Sequelize.STRING
+
+  }
+);
+
+
+// ----------------------------------------------------------------------------- PASSPORT JS INIT
+
+
+app.use(cookieParser());
+app.use(require('express-session')({ secret: 'keyboard cat', resave: false, saveUninitialized: false }));
+
+passport.use(new Strategy(
+
+	(username, password, cb)=>{
+		// NOTE User / Password confirmation for passportJS login
+		// use squelize search for first data entry with username feild match
+		User.findOne({
+			where: {
+				username: {
+					$iLike : `${username}`
+				}
+			}
+		}).then(data=>{
+			if (!data) {
+				return cb(null,false);
+			} else if (data.password !== password) {
+				return cb(null,false);
+			}
+			return cb(null,data);
+		});
+	}
+
+));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.serializeUser(function(user,cb){
+	// NOTE?? gets user data from previously defined local strategy, pushes to
+	// user parameter. first callback param is error throw?
+	cb(null, user.id);
+});
+
+passport.deserializeUser(function(id,cb){
+
+	User.findById(id).then(data=>{
+		if(!data) {
+			return cb(null,null);
+		}
+		cb(null,data);
+	});
+
+});
+
+
+// ----------------------------------------------------------------------------- PASSPORT JS INIT
+
 
 
 var Mta = require('mta-gtfs');
@@ -35,50 +119,21 @@ let lineNames = ['1', '2', '3', '4', '5', '6', '7', 'A', 'B', 'C', 'D', 'E', 'F'
 
 // Home route displaying lines and user defined favoried stops
 app.get('/', (req, res) => {
+
+
+  mta.stop('A20').then(function (result) {
+  console.log(result);
+  });
+
   return res.render('home', {
     lineNames
   });
 })
 
 // switch case for assigning lines to MTA Realtime API 'feeds'
-var getFeedId = function(feedId) {
-  switch (feedId) {
-    case 'A':
-    case 'C':
-    case 'E':
-      return 26;
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-      return 1;
-    case 'N':
-    case 'Q':
-    case 'R':
-    case 'W':
-      return 16;
-    case 'B':
-    case 'D':
-    case 'F':
-    case 'M':
-      return 21;
-    case 'L':
-      return 2;
-    case 'J':
-    case 'Z':
-      return 36;
-    case 'G':
-      return 31;
-    case '7':
-      return 51;
-    case 'SIR':
-      return 11;
-  }
-}
 
-// Reads json file with the lists of stopIds, on completion renders the line page 
+
+// Reads json file with the lists of stopIds, on completion renders the line page
 var getStops = function(feedId, line, res) {
   console.log(`getting stops for ${feedId}`);
   fs.readFile(`StaticData/FullSimple.json`, 'utf-8', function(err, result) {
@@ -97,13 +152,28 @@ var getStops = function(feedId, line, res) {
 
 // route for registration page
 app.get('/register', (req, res) => {
-  res.send(`<div class='wrap'>Route!</div>`)
+  res.render('register');
 });
+
+app.post('/register', (req,res) => {
+  User.create({
+    username: req.body.username,
+    password: req.body.password,
+    email: req.body.email
+  }).then(x=>{
+    res.redirect(`/confirmation/${req.body.username}&${req.body.password}`);
+  })
+});
+
+app.get('/confirmation/:username&:password', (req,res)=>{
+  res.send('welcome')
+})
 
 // route to call Line page w/ stops
 app.get('/lines/:line', (req, res) => {
   var line = req.params.line;
-  var feedId = getFeedId(line);
+  // references a swtch case for parsing feeds that correspond do specific lines
+  var feedId = getFeed.getFeedId(line);
   getStops(feedId, line, res);
 
 
@@ -121,57 +191,21 @@ app.get('/stops/:stop&:feedId', (req, res) => {
   // data file. Use the data-tester to make a dictionary, use dictionary as href and call the stop.
 
   mta.schedule(thisStop, thisFeed).then(function(result) {
-    console.log(result);
-    let station = [];
-    station[0] = {
-      data: result['schedule'][thisStop]["N"] || null
+
+    if (Object.keys(result).length === 0) {
+      console.log('no data');
+      return res.render('stopError', {
+        errorReport: 'Alas! No times are available',
+        stop: thisStop
+      });
     }
-    station[1] = {
-      data: result['schedule'][thisStop]["S"] || null
-    }
-    station[0].est = [];
-    station[1].est = [];
 
+    // Parseing agent for times and Northbound/Southbound differentiation
 
-    // let html1 = `<ul><h2>Northbound</h2>`
-    // let html2 = `<ul><h2>Southbound</h2>`
+    let station = stopFetch.fetch(thisStop, thisFeed, result);
 
-    let time = new Date();
-    time = time.getTime();
-    console.log(station[0]['data']);
-    if (station[0]['data']) {
-      for (let i = 0; i < 3; i++) {
-        if (station[0]['data'][i]) {
-          let estCalc = (station[0]['data'][i]['departureTime']).toString() + '000';
-          estCalc = Math.floor((parseInt(estCalc) - time) / 60000);
-          if (estCalc < 0) {
-            estCalc = 0;
-          }
-          console.log(estCalc);
-          station[0].est.push(estCalc);
-        }
-      }
-    }
-    console.log(station[0]);
-
-
-    if (station[1]['data']) {
-      for (let i = 0; i < 3; i++) {
-        if (station[1]['data'][i]) {
-          let estCalc = (station[1]['data'][i]['departureTime']).toString() + '000';
-          estCalc = Math.floor((parseInt(estCalc) - time) / 60000);
-          if (estCalc < 0) {
-            estCalc = 0;
-          }
-          console.log(estCalc);
-          station[1].est.push(estCalc);
-        }
-      }
-    }
-    console.log(station[1]);
-
-    console.log(thisStop);
-    res.render('stop', {
+    return res.render('stop', {
+      errorReport: '',
       station: station,
       stop: thisStop
     });
