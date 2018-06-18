@@ -6,10 +6,12 @@
   <title>
     <%= stop %>
   </title>
+  <link rel="stylesheet" href="/css/master.css">
+  <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:300,400,700" rel="stylesheet">
 </head>
 
 <body>
-  
+
   <ul>
     <h2>Northbound</h2>
     <% for (let i=0;i<station[1]['est'].length;i++) { %>
@@ -17,7 +19,7 @@
       <% if (!train) continue %>
 
       <li>
-        <strong style="margin:20px;"><%= train['routeId'] %></strong>
+        <strong style="margin-right:20px;"><%= train['routeId'] %></strong>
         <span class="est" data-index=<%= i %>><%= station[0]['est'][i] %> Minutes</span>
       </li>
     <% } %>
@@ -31,12 +33,14 @@
       <% if (!train) continue %>
 
       <li>
-        <strong style="margin:20px;"><%= train['routeId'] %></strong>
+        <strong style="margin-right:20px;"><%= train['routeId'] %></strong>
         <span class="est" data-index=<%= i %>><%= station[1]['est'][i] %> Minutes</span>
       </li>
     <% } %>
   </ul>
 
 </body>
-
+<footer>
+  <script type="text/javascript" src="/scripts/autoRefreshTemp.js"></script>
+</footer>
 </html>

@@ -7,3 +7,46 @@
     border: 1px solid #80808085;
     border-radius: 4px;
 }
+
+body {
+  font-family: 'Roboto Condensed', sans-serif;
+}
+
+/* Lines Page  */
+
+a {
+    color: black;
+    /* padding: 20px; */
+    text-decoration: none;
+    cursor:  pointer;
+    width: fit-content;
+}
+
+li.stop {
+    list-style: none;
+    margin-left: 15px;
+    padding: 20px;
+    border-bottom: 1px solid #0000001c;
+    margin-right: 15px;
+}
+
+/* End Lines Page */
+
+ul {
+    clear: both;
+    margin-left: 0px;
+    padding-left: 0px;
+    margin-bottom: 20px;
+    padding-bottom: 40px;
+    overflow: auto;
+    border-bottom: 1px solid #00000036;
+    list-style: none;
+}
+
+li {
+    width: fit-content;
+    float: left;
+    padding: 10px;
+    background-color: bisque;
+    margin: 5px;
+}
