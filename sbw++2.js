@@ -7,6 +7,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const Sequelize = require('sequelize')
 const passport = require('passport');
+const {Client} = require('pg')
 const Strategy = require('passport-local').Strategy;
 const cookieParser = require('cookie-parser');
 
@@ -24,7 +25,7 @@ app.use(express.static('public'));
 
 const Op = Sequelize.Op
 // const sequelize = new Sequelize('barkspace', postgres_user, postgres_pass, {
-const sequelize = new Sequelize('barkspace', 'postgres', 'Giraffes94', {
+const sequelize = new Sequelize('subwayplusplus', 'postgres', 'Giraffes94', {
 
 	// host: 'localhost',
 	// port: '5432',
@@ -48,10 +49,14 @@ const User = sequelize.define('user',
 
 	username: Sequelize.STRING,
 	email: Sequelize.STRING,
-	password: Sequelize.STRING
+	password: Sequelize.STRING,
+	favorites: Sequelize.STRING
 
   }
 );
+
+sequelize.sync()
+
 
 
 // ----------------------------------------------------------------------------- PASSPORT JS INIT
@@ -107,6 +112,9 @@ passport.deserializeUser(function(id,cb){
 // ----------------------------------------------------------------------------- PASSPORT JS INIT
 
 
+// mta.stop('A20').then(function (result) {
+// console.log(result);
+// });
 
 var Mta = require('mta-gtfs');
 var mta = new Mta({
@@ -116,17 +124,51 @@ var mta = new Mta({
 
 // Static list of posible train lines
 let lineNames = ['1', '2', '3', '4', '5', '6', '7', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'J', 'L', 'M', 'N', 'Q', 'R', 'S', 'W', 'Z', 'SIR'];
+var tempLogin = '';
 
 // Home route displaying lines and user defined favoried stops
 app.get('/', (req, res) => {
 
+	if (req.user) {
 
-  mta.stop('A20').then(function (result) {
-  console.log(result);
-  });
+		tempLogin = req.user.username;
+		let favs = JSON.parse(req.user.favorites);
+		if ( favs.length !== 0 ) {
+			for (var i = 0; i < favs.length; i++) {
 
+				mta.schedule(favs[i].stopId, favs[i].feedId).then(function(result) {
+
+			    if (Object.keys(result).length === 0) {
+			      console.log('no data');
+			      return res.render('stopError', {
+			        errorReport: 'Alas! No times are available',
+			        stop: thisStop,
+							tempLogin: username
+			      });
+			    }
+
+			    // Parseing agent for times and Northbound/Southbound differentiation
+
+			    let station = stopFetch.fetch(thisStop, thisFeed, result);
+
+			    return res.render('stop', {
+			      errorReport: '',
+			      station: station,
+			      stop: thisStop,
+						feed: thisFeed,
+						username: req.user.username,
+						tempLogin: username
+			    });
+			  }).catch(x => console.log(x));
+
+
+			}
+		}
+
+
+	}
   return res.render('home', {
-    lineNames
+    lineNames: lineNames, tempLogin: tempLogin
   });
 })
 
@@ -135,45 +177,34 @@ app.get('/', (req, res) => {
 
 // Reads json file with the lists of stopIds, on completion renders the line page
 var getStops = function(feedId, line, res) {
-  console.log(`getting stops for ${feedId}`);
+
+  // console.log(`getting stops for ${feedId}`);
   fs.readFile(`StaticData/FullSimple.json`, 'utf-8', function(err, result) {
     let stops = JSON.parse(result);
-    console.log(`readFile complete`);
-    console.log(stops[`line${line}`]);
+    // console.log(`readFile complete`);
+    // console.log(stops[`line${line}`]);
     return res.render('line', {
       line: line,
       stops: stops[`line${line}`],
-      feedId: feedId
+      feedId: feedId,
+			tempLogin: tempLogin
     });
   })
 
 }
 
 
-// route for registration page
-app.get('/register', (req, res) => {
-  res.render('register');
-});
-
-app.post('/register', (req,res) => {
-  User.create({
-    username: req.body.username,
-    password: req.body.password,
-    email: req.body.email
-  }).then(x=>{
-    res.redirect(`/confirmation/${req.body.username}&${req.body.password}`);
-  })
-});
-
-app.get('/confirmation/:username&:password', (req,res)=>{
-  res.send('welcome')
-})
-
 // route to call Line page w/ stops
 app.get('/lines/:line', (req, res) => {
   var line = req.params.line;
+
   // references a swtch case for parsing feeds that correspond do specific lines
   var feedId = getFeed.getFeedId(line);
+
+	if (req.user) {
+		tempLogin = req.user.username
+	}
+
   getStops(feedId, line, res);
 
 
@@ -181,8 +212,8 @@ app.get('/lines/:line', (req, res) => {
 
 app.get('/stops/:stop&:feedId', (req, res) => {
   // let lineInt = (parseInt(req.params.line[4]) - 1);
-  console.log(req.params.feedId);
-  console.log(req.params.stop);
+  // console.log(req.params.feedId);
+  // console.log(req.params.stop);
 
   var thisStop = req.params.stop.toString();
   var thisFeed = req.params.feedId.toString();
@@ -196,59 +227,109 @@ app.get('/stops/:stop&:feedId', (req, res) => {
       console.log('no data');
       return res.render('stopError', {
         errorReport: 'Alas! No times are available',
-        stop: thisStop
+        stop: thisStop,
+				tempLogin: username
       });
     }
 
     // Parseing agent for times and Northbound/Southbound differentiation
 
     let station = stopFetch.fetch(thisStop, thisFeed, result);
-
+		if (req.user) {
+			var username = req.user.username;
+		} else {
+			var username = '';
+		}
     return res.render('stop', {
       errorReport: '',
       station: station,
-      stop: thisStop
+      stop: thisStop,
+			feed: thisFeed,
+			username: username,
+			tempLogin: username
     });
   }).catch(x => console.log(x));
 
 
 
-  // console.log(`clicked ${req.params.stop}, found id ${thisStop}`);
+});
 
 
+// route for registration page
+app.get('/register', (req, res) => {
+  res.render('register', {tempLogin});
+});
+
+app.post('/register', (req,res) => {
+  User.create({
+    username: req.body.username,
+    password: req.body.password,
+    email: req.body.email,
+		favorites: '{ "favorites": [] }'
+
+  }).then(x=>{
+    res.redirect(`/confirmation/${req.body.username}&${req.body.password}`);
+  })
+});
+
+app.get('/confirmation/:username&:password', (req,res)=>{
+  res.render('confirmation',{username:req.params.username,password:req.params.password,tempLogin:tempLogin});
+});
+
+app.post('/confirmation', passport.authenticate('local', {failureRedirect: '/login'}), (req,res)=>{
+	res.redirect('/');
+});
+
+app.get('/login',(req,res)=>{
+	res.render('login',{tempLogin});
+});
+
+app.post('/login', passport.authenticate('local', {failureRedirect: '/login'}), (req,res)=>{
+	res.redirect('/');
+});
+
+app.get('/logout',(req,res)=>{
+	tempLogin = '';
+	req.logout();
+	res.redirect('/');
+});
+
+app.post('/favorite', (req,res)=>{
+
+	if (!req.user) {
+		return res.redirect('/login');
+	}
+
+	User.findOne({
+		where: {
+			username: {
+				$iLike: `${req.body.username}`
+			}
+		}
+	}).then(user=>{
+		console.log('----------------------------------- favs ------------------------------------');
+		console.log(user.dataValues.favorites);
+		var favs = JSON.parse(user.dataValues.favorites);
+		if (!Object.keys(favs.favorites).includes(req.body.stopId)) {
+			let newFav = {};
+			newFav.stopId=req.body.stopId;
+			newFav.feedId=req.body.feedId;
+			favs.favorites.push(newFav);
+			console.log(favs);
+			console.log('^ ---------- favs pre-join --------- ^');
+			favs = JSON.stringify(favs);
+			console.log(favs);
+			console.log('^ ---------- favs post-join --------- ^');
+			user.updateAttributes({
+				favorites: favs
+			}).then(user=>{
+				return res.redirect('/');
+			});
+		}
+	});
 })
 
 app.listen(8080, function(err) {
   if (err) throw err;
   console.log('server');
 });
-
-
-// getTime v1 ------------------- /
-// app.get('/stops/:stop&:line',(req,res)=>{
-//   let lineInt = (parseInt(req.params.line[4]) - 1);
-//   console.log(req.params.line);
-//   console.log(lineInt);
-//   var thisStop;
-//   for (let stop of lineParse.lines[lineInt]) {
-//     console.log(`${stop[1]['stop_name']} and ${req.params.stop}`);
-//     if (stop[1]['stop_name'] == req.params.stop) {
-//       thisStop = stop[1]['stop_id'];
-//       break;
-//     }
-//   }
-//   let test = setInterval(function(){
-//     if(thisStop) {
-//       mta.schedule(thisStop).then(function (result) {
-//         console.log(result);
-//         clearInterval(test);
-//       })
-//     }
-//   },500);
-//
-//
-//   console.log(`clicked ${req.params.stop}, found id ${thisStop}`);
-//
-//
-// })
-// -------------------------------------- /

@@ -1,0 +1,13 @@
+<nav>
+
+  <a href="/" style="float:left;margin:10px">home</a>
+
+  <% if (tempLogin.length === 0) { %>
+  <a href="/register" style="float:right;margin:10px">register</a>
+  <a href="/login" style="float:right;margin:10px">login</a>
+  <% } else { %>
+  <h5 style="float:right;margin:10px"><%= tempLogin %></h5>
+  <a href="/logout" style="float:right;margin:10px">logout</a>
+  <% } %>
+
+</nav>

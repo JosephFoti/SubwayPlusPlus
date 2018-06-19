@@ -1,0 +1,11 @@
+<div class="fav-feeder-wrap">
+
+  <% for (let fav of favs) { %>
+
+    <div class="fav-single" data-stopId=<%= fav.stopId %>>
+      <span><%= fav.lineName %></span><h4 class="stopname"><%= fav.stopName %></h4>
+    </div>
+
+  <% } %>
+
+</div>

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>confirmation</title>
+  </head>
+  <body>
+    <%- include partials/_navbar %>
+
+    <h2>Welcome to the better way to commute</h2>
+    <form class="sneakyConfirm" action="/confirmation" method="post">
+      <input type="text" name="username" style="display:none" value=<%= username %>>
+      <input type="text" name="password" style="display:none" value=<%= password %>>
+      <button type="submit" name="button">Back to homepage</button>
+    </form>
+  </body>
+</html>
