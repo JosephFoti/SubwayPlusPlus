@@ -14,7 +14,7 @@
     <h3 class="title" style="text-align:center;"><%= line %> contains <%= stops.length %> stops </h1>
   </div>
   <% for (let stop of stops) { %>
-    <a href=<%=`/stops/${stop[0]}&${feedId}`%>><li class='stop'><%= stop[1] %></li></a>
+    <a href=<%=`/stops/${stop[0]}&${feedId}&${stop[1].split(' ').join('+')}`%>><li class='stop'><%= stop[1] %></li></a>
   <% } %>
 </body>
 

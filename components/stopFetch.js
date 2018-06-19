@@ -18,13 +18,14 @@ var stopFetch = function(thisStop, thisFeed, result) {
   time = time.getTime();
   if (station[0]['data']) {
     for (let i = 0; i < 3; i++) {
-      if (station[0]['data'][i]) {
+      if (station[0]['data'][i] && station[0]['data'][i]['departureTime']) {
+
         let estCalc = (station[0]['data'][i]['departureTime']).toString() + '000';
         estCalc = Math.floor((parseInt(estCalc) - time) / 60000);
         if (estCalc < 0) {
           estCalc = 0;
         }
-        // console.log(estCalc);
+        console.log(estCalc);
         station[0].est.push(estCalc);
       }
     }
@@ -34,13 +35,14 @@ var stopFetch = function(thisStop, thisFeed, result) {
 
   if (station[1]['data']) {
     for (let i = 0; i < 3; i++) {
-      if (station[1]['data'][i]) {
+      if (station[1]['data'][i] && station[1]['data'][i]['departureTime']) {
+
         let estCalc = (station[1]['data'][i]['departureTime']).toString() + '000';
         estCalc = Math.floor((parseInt(estCalc) - time) / 60000);
         if (estCalc < 0) {
           estCalc = 0;
         }
-        // console.log(estCalc);
+        console.log(estCalc);
         station[1].est.push(estCalc);
       }
     }
