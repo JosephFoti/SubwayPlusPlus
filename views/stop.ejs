@@ -6,6 +6,8 @@
   <title>
     <%= stop %>
   </title>
+  <link rel="stylesheet" href="/css/master.css">
+  <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:300,400,700" rel="stylesheet">
 </head>
 
 <body>
@@ -16,10 +18,14 @@
       <input type="text" name="username" style="display:none;" value=<%= username %>  />
       <input type="text" name="stopId" style="display:none;" value=<%= stop %>  />
       <input type="text" name="feedId" style="display:none;" value=<%= feed %>  />
+      <input type="text" name="stationName" style="display:none;" value="<%= `${station.name}` %>" />
+
 
       <button type="submit" name="button">favorite</button>
     </form>
   </div>
+
+  <h2 class="stationName"><%= station.name %></h2>
 
   <ul>
     <h2>Northbound</h2>
@@ -28,7 +34,7 @@
       <% if (!train) continue %>
 
       <li>
-        <strong style="margin:20px;"><%= train['routeId'] %></strong>
+        <strong style="margin-right:20px;"><%= train['routeId'] %></strong>
         <span class="est" data-index=<%= i %>><%= station[0]['est'][i] %> Minutes</span>
       </li>
     <% } %>
@@ -42,12 +48,14 @@
       <% if (!train) continue %>
 
       <li>
-        <strong style="margin:20px;"><%= train['routeId'] %></strong>
+        <strong style="margin-right:20px;"><%= train['routeId'] %></strong>
         <span class="est" data-index=<%= i %>><%= station[1]['est'][i] %> Minutes</span>
       </li>
     <% } %>
   </ul>
 
 </body>
-
+<footer>
+  <script type="text/javascript" src="/scripts/autoRefreshTemp.js"></script>
+</footer>
 </html>

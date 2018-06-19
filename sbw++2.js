@@ -7,7 +7,9 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const Sequelize = require('sequelize')
 const passport = require('passport');
-const {Client} = require('pg')
+const {
+  Client
+} = require('pg')
 const Strategy = require('passport-local').Strategy;
 const cookieParser = require('cookie-parser');
 
@@ -18,7 +20,9 @@ const getFeed = require('./components/getFeed.js');
 
 app.set('view engine', 'ejs');
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({
+  extended: false
+}));
 app.use(express.static('public'));
 
 
@@ -27,33 +31,31 @@ const Op = Sequelize.Op
 // const sequelize = new Sequelize('barkspace', postgres_user, postgres_pass, {
 const sequelize = new Sequelize('subwayplusplus', 'postgres', 'Giraffes94', {
 
-	// host: 'localhost',
-	// port: '5432',
-	dialect: 'postgres',
-	operatorsAliases:{
-		$and: Op.and,
-		$or: Op.or,
-		$eq: Op.eq,
-		$regexp: Op.regexp,
-		$iRegexp: Op.iRegexp,
-		$like: Op.like,
-		$iLike: Op.iLike
-	}
+  // host: 'localhost',
+  // port: '5432',
+  dialect: 'postgres',
+  operatorsAliases: {
+    $and: Op.and,
+    $or: Op.or,
+    $eq: Op.eq,
+    $regexp: Op.regexp,
+    $iRegexp: Op.iRegexp,
+    $like: Op.like,
+    $iLike: Op.iLike
+  }
 })
 
 
 //____________________________________CREATE A TABLE
 
-const User = sequelize.define('user',
-  {
+const User = sequelize.define('user', {
 
-	username: Sequelize.STRING,
-	email: Sequelize.STRING,
-	password: Sequelize.STRING,
-	favorites: Sequelize.STRING
+  username: Sequelize.STRING,
+  email: Sequelize.STRING,
+  password: Sequelize.STRING,
+  favorites: Sequelize.STRING
 
-  }
-);
+});
 
 sequelize.sync()
 
@@ -63,48 +65,52 @@ sequelize.sync()
 
 
 app.use(cookieParser());
-app.use(require('express-session')({ secret: 'keyboard cat', resave: false, saveUninitialized: false }));
+app.use(require('express-session')({
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: false
+}));
 
 passport.use(new Strategy(
 
-	(username, password, cb)=>{
-		// NOTE User / Password confirmation for passportJS login
-		// use squelize search for first data entry with username feild match
-		User.findOne({
-			where: {
-				username: {
-					$iLike : `${username}`
-				}
-			}
-		}).then(data=>{
-			if (!data) {
-				return cb(null,false);
-			} else if (data.password !== password) {
-				return cb(null,false);
-			}
-			return cb(null,data);
-		});
-	}
+  (username, password, cb) => {
+    // NOTE User / Password confirmation for passportJS login
+    // use squelize search for first data entry with username feild match
+    User.findOne({
+      where: {
+        username: {
+          $iLike: `${username}`
+        }
+      }
+    }).then(data => {
+      if (!data) {
+        return cb(null, false);
+      } else if (data.password !== password) {
+        return cb(null, false);
+      }
+      return cb(null, data);
+    });
+  }
 
 ));
 
 app.use(passport.initialize());
 app.use(passport.session());
 
-passport.serializeUser(function(user,cb){
-	// NOTE?? gets user data from previously defined local strategy, pushes to
-	// user parameter. first callback param is error throw?
-	cb(null, user.id);
+passport.serializeUser(function(user, cb) {
+  // NOTE?? gets user data from previously defined local strategy, pushes to
+  // user parameter. first callback param is error throw?
+  cb(null, user.id);
 });
 
-passport.deserializeUser(function(id,cb){
+passport.deserializeUser(function(id, cb) {
 
-	User.findById(id).then(data=>{
-		if(!data) {
-			return cb(null,null);
-		}
-		cb(null,data);
-	});
+  User.findById(id).then(data => {
+    if (!data) {
+      return cb(null, null);
+    }
+    cb(null, data);
+  });
 
 });
 
@@ -129,46 +135,50 @@ var tempLogin = '';
 // Home route displaying lines and user defined favoried stops
 app.get('/', (req, res) => {
 
-	if (req.user) {
+  if (req.user) {
 
-		tempLogin = req.user.username;
-		let favs = JSON.parse(req.user.favorites);
-		if ( favs.length !== 0 ) {
-			for (var i = 0; i < favs.length; i++) {
+    tempLogin = req.user.username;
+    let data = JSON.parse(req.user.favorites);
+		console.log('--------------------------------------------------------------------------------');
+		console.log('data.favorites');
 
-				mta.schedule(favs[i].stopId, favs[i].feedId).then(function(result) {
+		console.log(data.favorites);
+		console.log('--------------------------------------------------------------------------------');
+		let favs = data.favorites
+    if (favs.length !== 0) {
+      for (var i = 0; i < favs.length; i++) {
+				console.log(`favorite ${i} is about to be fetched`);
+        mta.schedule(favs[i].stopId, favs[i].feedId).then(function(result) {
+					console.log(i);
+          if (Object.keys(result).length === 0) {
+            console.log('error on favs[' + i + ']');
+            favs[i].errorReport = 'Alas! No times are available';
+          }
 
-			    if (Object.keys(result).length === 0) {
-			      console.log('no data');
-			      return res.render('stopError', {
-			        errorReport: 'Alas! No times are available',
-			        stop: thisStop,
-							tempLogin: username
-			      });
-			    }
-
-			    // Parseing agent for times and Northbound/Southbound differentiation
-
-			    let station = stopFetch.fetch(thisStop, thisFeed, result);
-
-			    return res.render('stop', {
-			      errorReport: '',
-			      station: station,
-			      stop: thisStop,
-						feed: thisFeed,
-						username: req.user.username,
-						tempLogin: username
-			    });
-			  }).catch(x => console.log(x));
+          // Parseing agent for times and Northbound/Southbound differentiation
+					console.log('------------------------------------- run stopFetch -------------------------------------------');
+					console.log(favs[i].stopId);
+          favs[i].station = stopFetch.fetch(favs[i].stopId, favs[i].stopId, result);
+          console.log(favs[i]);
+          console.log(`favorite ${i} has data`);
+        }).catch(x => console.log(x));
 
 
-			}
-		}
+      }
+    }
+    console.log('return some favorites!');
+    console.log(favs);
+    return res.render('home', {
+      favs: favs,
+      lineNames: lineNames,
+      tempLogin: tempLogin
+    });
 
-
-	}
+  }
   return res.render('home', {
-    lineNames: lineNames, tempLogin: tempLogin
+    lineNames: lineNames,
+    tempLogin: tempLogin,
+    favs: false,
   });
 })
 
@@ -187,7 +197,7 @@ var getStops = function(feedId, line, res) {
       line: line,
       stops: stops[`line${line}`],
       feedId: feedId,
-			tempLogin: tempLogin
+      tempLogin: tempLogin
     });
   })
 
@@ -201,22 +211,23 @@ app.get('/lines/:line', (req, res) => {
   // references a swtch case for parsing feeds that correspond do specific lines
   var feedId = getFeed.getFeedId(line);
 
-	if (req.user) {
-		tempLogin = req.user.username
-	}
+  if (req.user) {
+    tempLogin = req.user.username
+  }
 
   getStops(feedId, line, res);
 
 
 });
 
-app.get('/stops/:stop&:feedId', (req, res) => {
+app.get('/stops/:stop&:feedId&:stationName', (req, res) => {
   // let lineInt = (parseInt(req.params.line[4]) - 1);
   // console.log(req.params.feedId);
   // console.log(req.params.stop);
 
   var thisStop = req.params.stop.toString();
   var thisFeed = req.params.feedId.toString();
+  var stationName = req.params.stationName.split('+').join(' ');
 
   // Get the stop and line from req params and use them to plug in the correct datapoint in the stops.json
   // data file. Use the data-tester to make a dictionary, use dictionary as href and call the stop.
@@ -228,25 +239,27 @@ app.get('/stops/:stop&:feedId', (req, res) => {
       return res.render('stopError', {
         errorReport: 'Alas! No times are available',
         stop: thisStop,
-				tempLogin: username
+        tempLogin: username
       });
     }
 
     // Parseing agent for times and Northbound/Southbound differentiation
 
     let station = stopFetch.fetch(thisStop, thisFeed, result);
-		if (req.user) {
-			var username = req.user.username;
-		} else {
-			var username = '';
-		}
+    station.name = stationName;
+
+    if (req.user) {
+      var username = req.user.username;
+    } else {
+      var username = '';
+    }
     return res.render('stop', {
       errorReport: '',
       station: station,
       stop: thisStop,
-			feed: thisFeed,
-			username: username,
-			tempLogin: username
+      feed: thisFeed,
+      username: username,
+      tempLogin: username
     });
   }).catch(x => console.log(x));
 
@@ -257,76 +270,89 @@ app.get('/stops/:stop&:feedId', (req, res) => {
 
 // route for registration page
 app.get('/register', (req, res) => {
-  res.render('register', {tempLogin});
+  res.render('register', {
+    tempLogin
+  });
 });
 
-app.post('/register', (req,res) => {
+app.post('/register', (req, res) => {
   User.create({
     username: req.body.username,
     password: req.body.password,
     email: req.body.email,
-		favorites: '{ "favorites": [] }'
+    favorites: '{ "favorites": [] }'
 
-  }).then(x=>{
+  }).then(x => {
     res.redirect(`/confirmation/${req.body.username}&${req.body.password}`);
   })
 });
 
-app.get('/confirmation/:username&:password', (req,res)=>{
-  res.render('confirmation',{username:req.params.username,password:req.params.password,tempLogin:tempLogin});
+app.get('/confirmation/:username&:password', (req, res) => {
+  res.render('confirmation', {
+    username: req.params.username,
+    password: req.params.password,
+    tempLogin: tempLogin
+  });
 });
 
-app.post('/confirmation', passport.authenticate('local', {failureRedirect: '/login'}), (req,res)=>{
-	res.redirect('/');
+app.post('/confirmation', passport.authenticate('local', {
+  failureRedirect: '/login'
+}), (req, res) => {
+  res.redirect('/');
 });
 
-app.get('/login',(req,res)=>{
-	res.render('login',{tempLogin});
+app.get('/login', (req, res) => {
+  res.render('login', {
+    tempLogin
+  });
 });
 
-app.post('/login', passport.authenticate('local', {failureRedirect: '/login'}), (req,res)=>{
-	res.redirect('/');
+app.post('/login', passport.authenticate('local', {
+  failureRedirect: '/login'
+}), (req, res) => {
+  res.redirect('/');
 });
 
-app.get('/logout',(req,res)=>{
-	tempLogin = '';
-	req.logout();
-	res.redirect('/');
+app.get('/logout', (req, res) => {
+  tempLogin = '';
+  req.logout();
+  res.redirect('/');
 });
 
-app.post('/favorite', (req,res)=>{
+app.post('/favorite', (req, res) => {
 
-	if (!req.user) {
-		return res.redirect('/login');
-	}
+  if (!req.user) {
+    return res.redirect('/login');
+  }
 
-	User.findOne({
-		where: {
-			username: {
-				$iLike: `${req.body.username}`
-			}
-		}
-	}).then(user=>{
-		console.log('----------------------------------- favs ------------------------------------');
-		console.log(user.dataValues.favorites);
-		var favs = JSON.parse(user.dataValues.favorites);
-		if (!Object.keys(favs.favorites).includes(req.body.stopId)) {
-			let newFav = {};
-			newFav.stopId=req.body.stopId;
-			newFav.feedId=req.body.feedId;
-			favs.favorites.push(newFav);
-			console.log(favs);
-			console.log('^ ---------- favs pre-join --------- ^');
-			favs = JSON.stringify(favs);
-			console.log(favs);
-			console.log('^ ---------- favs post-join --------- ^');
-			user.updateAttributes({
-				favorites: favs
-			}).then(user=>{
-				return res.redirect('/');
-			});
-		}
-	});
+  User.findOne({
+    where: {
+      username: {
+        $iLike: `${req.body.username}`
+      }
+    }
+  }).then(user => {
+    console.log('----------------------------------- favs ------------------------------------');
+    console.log(user.dataValues.favorites);
+    var favs = JSON.parse(user.dataValues.favorites);
+    if (!Object.keys(favs.favorites).includes(req.body.stopId)) {
+      let newFav = {};
+      newFav.stopId = req.body.stopId;
+      newFav.feedId = req.body.feedId;
+      newFav.stationName = req.body.stationName
+      favs.favorites.push(newFav);
+      console.log(favs);
+      console.log('^ ---------- favs pre-join --------- ^');
+      favs = JSON.stringify(favs);
+      console.log(favs);
+      console.log('^ ---------- favs post-join --------- ^');
+      user.updateAttributes({
+        favorites: favs
+      }).then(user => {
+        return res.redirect('/');
+      });
+    }
+  });
 })
 
 app.listen(8080, function(err) {
