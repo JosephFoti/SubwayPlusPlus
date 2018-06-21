@@ -53,7 +53,7 @@ const User = sequelize.define('user', {
   username: Sequelize.STRING,
   email: Sequelize.STRING,
   password: Sequelize.STRING,
-  favorites: Sequelize.STRING
+  favorites: Sequelize.JSON
 
 });
 
@@ -139,35 +139,56 @@ app.get('/', (req, res) => {
 
     tempLogin = req.user.username;
     let data = JSON.parse(req.user.favorites);
-		console.log('--------------------------------------------------------------------------------');
-		console.log('data.favorites');
+    // console.log('--------------------------------------------------------------------------------');
+    // console.log('data.favorites');
+    //
+    // console.log(data.favorites);
+    // console.log('--------------------------------------------------------------------------------');
+    let favs = data.favorites
 
-		console.log(data.favorites);
-		console.log('--------------------------------------------------------------------------------');
-		let favs = data.favorites
+    fs.writeFile(`${__dirname}/public/data/favoriteStopTimes.json`, JSON.stringify(data), (err) => {
+      console.log('-------------------------------------- new file written ------------------------------------------');
+      if (err) {
+        console.log(err);
+      }
+    });
+
     if (favs.length !== 0) {
       for (var i = 0; i < favs.length; i++) {
-				console.log(`favorite ${i} is about to be fetched`);
-        mta.schedule(favs[i].stopId, favs[i].feedId).then(function(result) {
-					console.log(i);
+        const thisIndex = i
+        mta.schedule(favs[thisIndex].stopId, favs[thisIndex].feedId).then(function(result) {
+
+          console.log(`favorite ${thisIndex} has been pulled from the mta, about to be fetched`);
+
           if (Object.keys(result).length === 0) {
-            console.log('error on favs[' + i + ']');
-            favs[i].errorReport = 'Alas! No times are available';
+            console.log('error on favs[' + thisIndex + ']');
+            favs[thisIndex].errorReport = 'Alas! No times are available';
           }
 
-          // Parseing agent for times and Northbound/Southbound differentiation
-					console.log('------------------------------------- run stopFetch -------------------------------------------');
-					console.log(favs[i].stopId);
-          favs[i].station = stopFetch.fetch(favs[i].stopId, favs[i].stopId, result);
-          console.log(favs[i]);
-          console.log(`favorite ${i} has data`);
+          fs.readFile(`${__dirname}/public/data/favoriteStopTimes.json`, 'utf-8', (err,data)=>{
+            console.log('readFile!');
+            data = JSON.parse(data)
+            for (let favItem of data['favorites']) {
+              if (favItem.stopId === favs[thisIndex].stopId) {
+                favs[thisIndex].station = stopFetch.fetch(favs[thisIndex].stopId, favs[thisIndex].stopId, result);
+                console.log('-------------------------------------- preparing to write file with --------------------------------------');
+                console.log(favs);
+                fs.writeFile(`${__dirname}/public/data/favoriteStopTimes.json`, JSON.stringify(favs), (err)=>{
+                  if (err) {
+                    console.log(err);
+                  }
+                  console.log('-------------------------------------- new file written in loop ------------------------------------------');
+                });
+              }
+            }
+          })
+
         }).catch(x => console.log(x));
 
 
       }
     }
-    console.log('return some favorites!');
-    console.log(favs);
+
     return res.render('home', {
       favs: favs,
       lineNames: lineNames,

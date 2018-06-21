@@ -49,8 +49,8 @@ var stopFetch = function(thisStop, thisFeed, result) {
   }
   console.log(station[1]['data']);
 
-  console.log('--------------------------- Stop Fetch Ran ---------------------------');
-  console.log(station);
+  // console.log('--------------------------- Stop Fetch Ran ---------------------------');
+  // console.log(station);
   return station;
 
 }
