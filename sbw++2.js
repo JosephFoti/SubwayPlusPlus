@@ -152,7 +152,7 @@ app.get('/', (req, res) => {
         console.log(err);
       }
     });
-
+    console.log(favs);
     if (favs.length !== 0) {
       for (var i = 0; i < favs.length; i++) {
         const thisIndex = i

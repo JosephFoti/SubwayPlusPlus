@@ -12,7 +12,9 @@
     <h1>Subway++</h1>
     <h4>Your one stop for all of your subway time needs</h4>
     <hr/>
+    <% if (favs) { %>
     <%- include partials/_favoriteFeeder.ejs %>
+    <% } %>
     <h2>Lines</h2>
     <% for (line of lineNames) { %>
       <a href=<%= `/lines/${line}`%> ><div class="lineName" data-line=<%= line %>><%= line %></div></a>
