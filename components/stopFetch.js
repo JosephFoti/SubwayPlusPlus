@@ -30,7 +30,7 @@ var stopFetch = function(thisStop, thisFeed, result) {
       }
     }
   }
-  console.log(station[0]['data']);
+  // console.log(station[0]['data']);
 
 
   if (station[1]['data']) {
@@ -47,7 +47,7 @@ var stopFetch = function(thisStop, thisFeed, result) {
       }
     }
   }
-  console.log(station[1]['data']);
+  // console.log(station[1]['data']);
 
   // console.log('--------------------------- Stop Fetch Ran ---------------------------');
   // console.log(station);

@@ -17,6 +17,8 @@ const app = express();
 
 const stopFetch = require('./components/stopFetch.js');
 const getFeed = require('./components/getFeed.js');
+const getFavs = require('./components/getFavTimes.js');
+
 
 app.set('view engine', 'ejs');
 app.use(bodyParser.json());
@@ -135,59 +137,20 @@ var tempLogin = '';
 // Home route displaying lines and user defined favoried stops
 app.get('/', (req, res) => {
 
+  getFavs.test();
+
   if (req.user) {
 
-    tempLogin = req.user.username;
+    setInterval(function(){
+      getFavs.getFavs(req);
+    },5000);
+
+
     let data = JSON.parse(req.user.favorites);
-    // console.log('--------------------------------------------------------------------------------');
-    // console.log('data.favorites');
-    //
-    // console.log(data.favorites);
-    // console.log('--------------------------------------------------------------------------------');
-    let favs = data.favorites
+    let favs = data.favorites;
 
-    fs.writeFile(`${__dirname}/public/data/favoriteStopTimes.json`, JSON.stringify(data), (err) => {
-      console.log('-------------------------------------- new file written ------------------------------------------');
-      if (err) {
-        console.log(err);
-      }
-    });
+    getFavs.getFavs(req);
 
-    if (favs.length !== 0) {
-      for (var i = 0; i < favs.length; i++) {
-        const thisIndex = i
-        mta.schedule(favs[thisIndex].stopId, favs[thisIndex].feedId).then(function(result) {
-
-          console.log(`favorite ${thisIndex} has been pulled from the mta, about to be fetched`);
-
-          if (Object.keys(result).length === 0) {
-            console.log('error on favs[' + thisIndex + ']');
-            favs[thisIndex].errorReport = 'Alas! No times are available';
-          }
-
-          fs.readFile(`${__dirname}/public/data/favoriteStopTimes.json`, 'utf-8', (err,data)=>{
-            console.log('readFile!');
-            data = JSON.parse(data)
-            for (let favItem of data['favorites']) {
-              if (favItem.stopId === favs[thisIndex].stopId) {
-                favs[thisIndex].station = stopFetch.fetch(favs[thisIndex].stopId, favs[thisIndex].stopId, result);
-                console.log('-------------------------------------- preparing to write file with --------------------------------------');
-                console.log(favs);
-                fs.writeFile(`${__dirname}/public/data/favoriteStopTimes.json`, JSON.stringify(favs), (err)=>{
-                  if (err) {
-                    console.log(err);
-                  }
-                  console.log('-------------------------------------- new file written in loop ------------------------------------------');
-                });
-              }
-            }
-          })
-
-        }).catch(x => console.log(x));
-
-
-      }
-    }
 
     return res.render('home', {
       favs: favs,
