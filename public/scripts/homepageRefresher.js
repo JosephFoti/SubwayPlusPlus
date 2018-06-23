@@ -1,12 +1,15 @@
 $(document).ready(function(){
-  console.log('hello!!');
+  console.log('hello!! new string');
   var singles = $('.fav-single').children('.times-wrapper')
+  var tempLogin = $('.tempLogin').text();
+  console.log(singles);
 
+  if (tempLogin) {
 
   $.ajax({
-    url:'../data/favoriteStopTimes.json',
+    url:`../data/${tempLogin}_favoriteStopTimes.json`,
     success: function(result) {
-      console.log(result);
+      var result = result['favorites'];
       let html = '';
       for (let i=0;i < result.length;i++) {
         if (!result[i]['station']) {
@@ -25,9 +28,13 @@ $(document).ready(function(){
           html += `</ul>`
         // $(singles).eq(i).innerHTML(html);
       singles[i].innerHTML = html;
-        html = '';
+      html = '';
       }
-      console.log(html);
+
+    },
+    failure: function(err) {
+      console.log('something went wrong!');
+      console.log(err);
     }
   });
 
@@ -36,9 +43,10 @@ $(document).ready(function(){
     $.ajax({
       url:'../data/favoriteStopTimes.json',
       success: function(result) {
-        console.log(result);
+        var result = result['favorites'];
         let html = '';
         for (let i=0;i < result.length;i++) {
+          console.log('checking result '+i)
           if (!result[i]['station']) {
             break;
           }
@@ -54,14 +62,19 @@ $(document).ready(function(){
           }
             html += `</ul>`
           // $(singles).eq(i).innerHTML(html);
+
         singles[i].innerHTML = html;
-          html = '';
+        html = '';
         }
-        console.log(html);
+      },
+      failure: function(err) {
+        console.log('something went wrong!');
+        console.log(err);
       }
     });
-  },15000);
+  },5000);
 
 
+}
 
 })

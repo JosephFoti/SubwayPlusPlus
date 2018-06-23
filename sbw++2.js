@@ -143,9 +143,9 @@ app.get('/', (req, res) => {
 
     setInterval(function(){
       getFavs.getFavs(req);
-    },5000);
+    },15000);
 
-
+    tempLogin = req.user.username;
     let data = JSON.parse(req.user.favorites);
     let favs = data.favorites;
 
