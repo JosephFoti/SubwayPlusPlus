@@ -1,4 +1,3 @@
-// NOTE NOTE NOTE  Test case for simple scrape data
 
 const ejs = require('ejs')
 const http = require('http');
