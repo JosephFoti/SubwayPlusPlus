@@ -9,13 +9,15 @@
   <body>
 
     <%- include partials/_navbar %>
-    <h1>Subway++</h1>
+    <div class="hp-banner">
     <h4>Your one stop for all of your subway time needs</h4>
     <hr/>
+    </div>
+
     <%- include partials/_favoriteFeeder.ejs %>
-    <h2>Lines</h2>
+    <h2 class="subtitle">Lines</h2>
     <% for (line of lineNames) { %>
-      <a href=<%= `/lines/${line}`%> ><div class="lineName" data-line=<%= line %>><%= line %></div></a>
+      <a class="line-wrap" href=<%= `/lines/${line}`%> ><div class="line-name line-type-<%= line %>" data-line=<%= line %>><%= line %></div></a>
     <% } %>
 
   </body>

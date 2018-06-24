@@ -89,7 +89,7 @@ const getFavs = function(req) {
               });
             }
           }
-        })
+        });
 
       }).catch(x => console.log(x));
 

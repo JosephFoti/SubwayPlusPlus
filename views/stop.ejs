@@ -14,7 +14,7 @@
   <%- include partials/_navbar %>
 
   <div class="favoriteBtnWrap">
-    <form class="" action="/favorite" method="post">
+    <form class="favorite-form" action="/favorite" method="post">
       <input type="text" name="username" style="display:none;" value=<%= username %>  />
       <input type="text" name="stopId" style="display:none;" value=<%= stop %>  />
       <input type="text" name="feedId" style="display:none;" value=<%= feed %>  />
@@ -25,15 +25,15 @@
     </form>
   </div>
 
-  <h2 class="stationName"><%= station.name %></h2>
+  <h2 class="subtitle"><%= station.name %></h2>
 
-  <ul>
+  <ul class="times-wrapper">
     <h2>Northbound</h2>
     <% for (let i=0;i<station[1]['est'].length;i++) { %>
       <% var train = station[0]['data'][i] %>
       <% if (!train) continue %>
 
-      <li>
+      <li class="line-type-<%= train['routeId'] %>">
         <strong style="margin-right:20px;"><%= train['routeId'] %></strong>
         <span class="est" data-index=<%= i %>><%= station[0]['est'][i] %> Minutes</span>
       </li>
@@ -41,13 +41,13 @@
 
   </ul>
 
-  <ul>
+  <ul class="times-wrapper">
     <h2>Southbound</h2>
     <% for (let i=0;i<station[1]['est'].length;i++) { %>
       <% var train = station[1]['data'][i] %>
       <% if (!train) continue %>
 
-      <li>
+      <li class="line-type-<%= train['routeId'] %>">
         <strong style="margin-right:20px;"><%= train['routeId'] %></strong>
         <span class="est" data-index=<%= i %>><%= station[1]['est'][i] %> Minutes</span>
       </li>
