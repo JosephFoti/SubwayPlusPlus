@@ -138,8 +138,6 @@ var mta = new Mta({
 let lineNames = ['1', '2', '3', '4', '5', '6', '7', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'J', 'L', 'M', 'N', 'Q', 'R', 'S', 'W', 'Z', 'SIR'];
 var tempLogin = '';
 
-var dataPull;
-
 // Home route displaying lines and user defined favoried stops
 app.get('/', (req, res) => {
 
@@ -147,7 +145,7 @@ app.get('/', (req, res) => {
 
   if (req.user) {
 
-    dataPull = setInterval(function(){
+    setInterval(function(){
       getFavs.getFavs(req);
     },15000);
 
@@ -304,13 +302,6 @@ app.post('/login', passport.authenticate('local', {
 });
 
 app.get('/logout', (req, res) => {
-
-  tempLogin = req.user.username;
-
-  if (!fs.existsSync(`./public/data/${tempLogin}_favoriteStopTimes.json`)) {
-    fs.unlinkSync(`./public/data/${tempLogin}_favoriteStopTimes.json`);
-  }
-
   tempLogin = '';
   req.logout();
   res.redirect('/');
@@ -352,13 +343,7 @@ app.post('/favorite', (req, res) => {
   });
 })
 
-
-app.post('/stopData',(req,res)=>{
-  console.log('stop data called');
-  clearInterval(dataPull);
-})
-
-app.listen(8080, function(err) {
+app.listen(PORT, function(err) {
   if (err) throw err;
-  console.log('server');
+  console.log('server on 3000');
 });
