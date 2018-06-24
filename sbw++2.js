@@ -146,6 +146,10 @@ app.get('/', (req, res) => {
       getFavs.getFavs(req);
     },15000);
 
+    setTimeout(function(){
+      clearInterval(dataPull);
+    },600000);
+
     tempLogin = req.user.username;
     let data = JSON.parse(req.user.favorites);
     let favs = data.favorites;

@@ -151,6 +151,10 @@ app.get('/', (req, res) => {
       getFavs.getFavs(req);
     },15000);
 
+    setTimeout(function(){
+      clearInterval(dataPull);
+    },600000);
+
     tempLogin = req.user.username;
     let data = JSON.parse(req.user.favorites);
     let favs = data.favorites;
@@ -310,7 +314,7 @@ app.get('/logout', (req, res) => {
   if (!fs.existsSync(`./public/data/${tempLogin}_favoriteStopTimes.json`)) {
     fs.unlinkSync(`./public/data/${tempLogin}_favoriteStopTimes.json`);
   }
-  
+
   console.log('stop data called');
   clearInterval(dataPull);
 

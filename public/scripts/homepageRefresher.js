@@ -91,3 +91,11 @@ window.onbeforeunload = function(){
 
 
 }
+
+document.pagehide = function(){
+
+  $.post( "/stopData", function( data ) {
+    console.log('goodbye!')
+  });
+
+}
