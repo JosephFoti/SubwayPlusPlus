@@ -82,3 +82,12 @@ $(document).ready(function(){
 }
 
 })
+
+window.onbeforeunload = function(){
+
+  $.post( "/stopData", function( data ) {
+    console.log(data);
+  });
+
+
+}
