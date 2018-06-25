@@ -433,6 +433,8 @@ span.time-item-line {
       text-align: center;
       overflow: auto;
   }
+
+  /*    */
 }
 
 @media screen and (max-width:1050px) and (min-width:786px) {
