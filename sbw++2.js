@@ -1,4 +1,3 @@
-
 const ejs = require('ejs')
 const http = require('http');
 const fs = require('fs');
@@ -131,31 +130,34 @@ var mta = new Mta({
 
 // Static list of posible train lines
 let lineNames = ['1', '2', '3', '4', '5', '6', '7', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'J', 'L', 'M', 'N', 'Q', 'R', 'S', 'W', 'Z', 'SIR'];
-var tempLogin = '';
+// var tempLogin = '';
 
 var dataPull;
 
 // Home route displaying lines and user defined favoried stops
 app.get('/', (req, res) => {
 
+  if (!req.user) {
+      tempLogin = ''
+  }
+
   getFavs.test();
 
-  if (req.user) {
+  if (req.user && fs.existsSync(`./public/data/${req.user.username}_favoriteStopTimes.json`)) {
 
-    dataPull = setInterval(function(){
+    dataPull = setInterval(function() {
       getFavs.getFavs(req);
-    },15000);
+    }, 15000);
 
-    setTimeout(function(){
+    setTimeout(function() {
       clearInterval(dataPull);
-    },600000);
+    }, 600000);
 
     tempLogin = req.user.username;
     let data = JSON.parse(req.user.favorites);
     let favs = data.favorites;
 
     getFavs.getFavs(req);
-
 
     return res.render('home', {
       favs: favs,
@@ -344,17 +346,27 @@ app.post('/favorite', (req, res) => {
       favs = JSON.stringify(favs);
       console.log(favs);
       console.log('^ ---------- favs post-join --------- ^');
+
+      // write to database for persistance
       user.updateAttributes({
         favorites: favs
       }).then(user => {
-        return res.redirect('/');
+
+        // write static file for client reference
+        fs.writeFile(`./public/data/${tempLogin}_favoriteStopTimes.json`, favs, (err) => {
+          console.log('-------------------------------------- new file written ------------------------------------------');
+          if (err) {
+            console.log(err);
+          }
+          return res.redirect('/');
+        });
       });
     }
   });
 })
 
 
-app.post('/stopData',(req,res)=>{
+app.post('/stopData', (req, res) => {
   console.log('stop data called');
   clearInterval(dataPull);
 })

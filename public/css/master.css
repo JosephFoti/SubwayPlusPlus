@@ -295,6 +295,13 @@ span.fav-line-name {
 
 }
 
+span.fav-refresh {
+    font-weight: 100;
+    margin-left: 7px;
+    font-size: 14px;
+    text-transform: uppercase;
+}
+
 /*  colors  */
 
 .line-type-1, .line-type-2, .line-type-3 {

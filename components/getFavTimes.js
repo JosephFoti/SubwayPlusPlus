@@ -23,9 +23,11 @@ const getFavs = function(req) {
   if (!fs.existsSync(`./public/data/${tempLogin}_favoriteStopTimes.json`)) {
 
     // NOTE: We can use this to set a temporary loader on start
+    console.log('-------------------------------------- File NDE ------------------------------------------');
 
     console.log('base favorite file did not exist!');
-
+    console.log('writing file with following string');
+    console.log(JSON.stringify(data));
     // make static file for user so that each user can interact individually with their data
     fs.writeFile(`./public/data/${tempLogin}_favoriteStopTimes.json`, JSON.stringify(data), (err) => {
       console.log('-------------------------------------- new file written ------------------------------------------');
@@ -50,7 +52,7 @@ const getFavs = function(req) {
         console.log(`favorite ${thisIndex} has been pulled from the mta, about to be fetched`);
 
         if (Object.keys(result).length === 0) {
-          console.log('error on data.favorites[' + thisIndex + ']');
+          console.log('MTA error on data.favorites[' + thisIndex + ']');
           data.favorites[thisIndex].errorReport = 'Alas! No times are available';
         }
 

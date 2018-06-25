@@ -5,6 +5,27 @@ $(document).ready(function(){
   console.log(singles);
   console.log(tempLogin);
 
+  function getLastRefresh(favIndex) {
+
+    let date = new Date();
+    var hours = date.getHours(),
+    minutes = date.getMinutes(),
+    ampm = hours >= 12 ? 'pm' : 'am';
+
+    hours = hours % 12;
+    hours = hours ? hours : 12;
+
+    minutes = minutes < 10 ? '0'+minutes : minutes;
+    var strTime = hours + ':' + minutes + ' ' + ampm;
+
+    if (favIndex > 0) {
+      $('.fav-refresh').eq([favIndex]).text('Last refresh was at '+strTime);
+    } else {
+      $('.fav-refresh').text('Last refresh | '+strTime);
+    }
+
+  }
+
   $.ajax({
     url:`../data/${tempLogin}_favoriteStopTimes.json`,
     success: function(result) {
@@ -30,6 +51,7 @@ $(document).ready(function(){
         // $(singles).eq(i).innerHTML(html);
       singles[i].innerHTML = html;
       html = '';
+      getLastRefresh(i);
       }
 
     },
@@ -68,6 +90,7 @@ $(document).ready(function(){
 
         singles[i].innerHTML = html;
         html = '';
+        getLastRefresh(i);
         }
       },
       failure: function(err) {

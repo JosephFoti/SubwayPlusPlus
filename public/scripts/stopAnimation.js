@@ -1,24 +1,24 @@
 $('document').ready(function(){
 
-  let timestamp = new Date();
 
+  function getLastRefresh() {
 
-  function toPeriodFormat(date) {
+    let date = new Date();
     var hours = date.getHours(),
     minutes = date.getMinutes(),
     ampm = hours >= 12 ? 'pm' : 'am';
 
     hours = hours % 12;
-    hours = hours ? hours : 12; // the hour '0' should be '12'
+    hours = hours ? hours : 12;
 
     minutes = minutes < 10 ? '0'+minutes : minutes;
     var strTime = hours + ':' + minutes + ' ' + ampm;
 
-    return strTime;
+    $('.lastRefresh').text('Last refresh was at '+strTime);
+
   }
 
-  timestamp = toPeriodFormat(timestamp);
-  $('.lastRefresh').text('Last refresh was at '+timestamp)
+  getLastRefresh();
 
     setTimeout(function(){
         $('.loader').fadeOut(500);
