@@ -509,8 +509,8 @@
   ],
 
   "lineE": [
-    ["G05", "Jamaica Center - Parsons/Archer"],
-    ["G06", "Sutphin Blvd/Archer Av/JFK Airport"],
+    ["G05", "Jamaica Center - Parsons | Archer"],
+    ["G06", "Sutphin Blvd | Archer Av | JFK Airport"],
     ["G07", "Jamaica - Van Wyck"],
     ["F05", "Briarwood - Van Wyck Blvd"],
     ["F06", "Kew Gardens - Union Tpke"],
@@ -529,10 +529,10 @@
     ["G20", "36 Street"],
     ["G21", "Queens Plaza"],
     ["F09", "Court Sq-23 St"],
-    ["F11", "Lexington Avenue / 53 Street"],
-    ["F12", "5 Avenue / 53 Street"],
-    ["D14", "7 Avenue / 53 Street"],
-    ["A25", "50 Street / 8 Avenue"],
+    ["F11", "Lexington Avenue  |  53 Street"],
+    ["F12", "5 Avenue  |  53 Street"],
+    ["D14", "7 Avenue  |  53 Street"],
+    ["A25", "50 Street  |  8 Avenue"],
     ["A27", "42 Street- Port Authority Bus Terminal"],
     ["A28", "34 Street-Penn Station"],
     ["A30", "23 Street "],
@@ -555,7 +555,7 @@
     ["G14", "Jackson Heights-Roosevelt Avenue"],
     ["B04", "21 Street"],
     ["B06", "Roosevelt Island"],
-    ["B08", "Lexington Av/63 St"],
+    ["B08", "Lexington Av | 63 St"],
     ["B10", "57 St"],
     ["D15", "47-50 Sts - Rockefeller Ctr"],
     ["D16", "42 St - Bryant Pk"],
@@ -572,7 +572,7 @@
     ["F20", "Bergen St"],
     ["F21", "Carroll St"],
     ["F22", "Smith - 9 Sts"],
-    ["F23", "4 Avenue/9 Street"],
+    ["F23", "4 Avenue | 9 Street"],
     ["F24", "7 Av"],
     ["F25", "15 St - Prospect Park"],
     ["F26", "Fort Hamilton Pkwy"],
@@ -587,7 +587,7 @@
     ["F36", "Avenue U"],
     ["F38", "Avenue X"],
     ["F39", "Neptune Av"],
-    ["D42", "West 8th St/NY Aquarium"],
+    ["D42", "West 8th St | NY Aquarium"],
     ["D43", "Coney Island - Stillwell Av"]
   ],
 
@@ -597,7 +597,7 @@
     ["G26", "Greenpoint Avenue"],
     ["G28", "Nassau Avenue"],
     ["G29", "Metropolitan Avenue"],
-    ["G30", "Broadway / Union Avenue"],
+    ["G30", "Broadway  |  Union Avenue"],
     ["G31", "Flushing Avenue"],
     ["G32", "Myrtle-Willoughby Avenues"],
     ["G33", "Bedford-Nostrand Avenues"],
@@ -608,15 +608,15 @@
     ["F20", "Bergen Street"],
     ["F21", "Carroll Street "],
     ["F22", "Smith-9 Streets"],
-    ["F23", "4 Avenue/9 Street"],
+    ["F23", "4 Avenue | 9 Street"],
     ["F24", "7 Avenue"],
     ["F25", "15 Street-Prospect Park"],
     ["F26", "Fort Hamilton Parkway"],
-    ["F27", "Church Avenue / McDonald"]
+    ["F27", "Church Avenue  |  McDonald"]
   ],
 
   "lineJ": [
-    ["G05", "Jamaica Center - Parsons/Archer"],
+    ["G05", "Jamaica Center - Parsons | Archer"],
     ["G06", "Sutphin Blvd - Archer Av - JFK Airport"],
     ["J12", "121 St"],
     ["J13", "111 St"],
@@ -722,8 +722,8 @@
     ["R06", "36 Av"],
     ["R08", "39 Av"],
     ["R09", "Queensboro Plaza"],
-    ["R11", "Lexington Av/ 59 St"],
-    ["R13", "5 Av/ 59 St"],
+    ["R11", "Lexington Av |  59 St"],
+    ["R13", "5 Av |  59 St"],
     ["R14", "57 St-7 Avenue"],
     ["R15", "49 St"],
     ["R16", "Times Sq-42 St"],
@@ -795,7 +795,7 @@
     ["D39", "Sheepshead Bay"],
     ["D40", "Brighton Beach"],
     ["D41", "Ocean Parkway"],
-    ["D42", "West 8th St/NY Aquarium"]
+    ["D42", "West 8th St | NY Aquarium"]
   ],
 
   "lineR": [
@@ -887,7 +887,7 @@
   ],
 
   "lineZ": [
-    ["G05", "Jamaica Center - Parsons/Archer"],
+    ["G05", "Jamaica Center - Parsons | Archer"],
     ["G06", "Sutphin Blvd - Archer Av - JFK Airport"],
     ["J12", "121 St"],
     ["J14", "104 St"],

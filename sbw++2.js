@@ -139,11 +139,15 @@ app.get('/', (req, res) => {
 
   if (!req.user) {
       tempLogin = ''
+  } else {
+    tempLogin = req.user.username;
   }
+
+  console.log(tempLogin);
 
   getFavs.test();
 
-  if (req.user && fs.existsSync(`./public/data/${req.user.username}_favoriteStopTimes.json`)) {
+  if (req.user) {
 
     dataPull = setInterval(function() {
       getFavs.getFavs(req);
@@ -169,7 +173,7 @@ app.get('/', (req, res) => {
   return res.render('home', {
     lineNames: lineNames,
     tempLogin: tempLogin,
-    favs: false,
+    favs: false
   });
 })
 
@@ -310,7 +314,7 @@ app.get('/logout', (req, res) => {
 
   tempLogin = req.user.username;
 
-  if (!fs.existsSync(`./public/data/${tempLogin}_favoriteStopTimes.json`)) {
+  if (fs.existsSync(`./public/data/${tempLogin}_favoriteStopTimes.json`)) {
     fs.unlinkSync(`./public/data/${tempLogin}_favoriteStopTimes.json`);
   }
 

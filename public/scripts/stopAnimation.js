@@ -1,20 +1,22 @@
 $('document').ready(function(){
 
 
-  function getLastRefresh() {
+  function getLastRefresh(favIndex) {
 
     let date = new Date();
     var hours = date.getHours(),
     minutes = date.getMinutes(),
+    seconds = date.getSeconds(),
     ampm = hours >= 12 ? 'pm' : 'am';
 
     hours = hours % 12;
     hours = hours ? hours : 12;
 
     minutes = minutes < 10 ? '0'+minutes : minutes;
-    var strTime = hours + ':' + minutes + ' ' + ampm;
+    var strTime = hours + ':' + minutes + ':' + seconds +' ' + ampm;
 
-    $('.lastRefresh').text('Last refresh was at '+strTime);
+
+    $('.lastRefresh').text('Last refresh | '+strTime);
 
   }
 

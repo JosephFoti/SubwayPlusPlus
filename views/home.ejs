@@ -11,9 +11,20 @@
   <body>
 
     <%- include partials/_navbar %>
-    <div class="hp-banner">
-    <h4>Your one stop for all of your subway time needs</h4>
-    </div>
+    <% if (tempLogin.length > 0 && favs == false) { %>
+      <div class="hp-banner no-favorites" style="height: 60px;border-bottom: 1px solid #828282;">
+      <h4>Navigate to your favorite stops and click 'favorite' to have them display on your homepage</h4>
+      </div>
+    <% } else if (tempLogin.length === 0) { %>
+      <div class="hp-banner no-login" style="height: 80px;border-bottom: 1px solid #828282;">
+      <h4>Your one stop for all of your subway time needs</br>Select a subway line below to begin or register to save your favoite lines</h4>
+      </div>
+    <% } else { %>
+      <div class="hp-banner login-and-favorites" style="height: fit-content;text-align:center">
+      <h2 style="margin-top: 40px;">Your Favorites</h2>
+      </div>
+    <% } %>
+
 
     <%- include partials/_favoriteFeeder.ejs %>
     <h2 class="subtitle">Lines</h2>

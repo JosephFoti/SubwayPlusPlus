@@ -10,13 +10,14 @@ $(document).ready(function(){
     let date = new Date();
     var hours = date.getHours(),
     minutes = date.getMinutes(),
+    seconds = date.getSeconds(),
     ampm = hours >= 12 ? 'pm' : 'am';
 
     hours = hours % 12;
     hours = hours ? hours : 12;
 
     minutes = minutes < 10 ? '0'+minutes : minutes;
-    var strTime = hours + ':' + minutes + ' ' + ampm;
+    var strTime = hours + ':' + minutes + ':' + seconds +' ' + ampm;
 
     if (favIndex > 0) {
       $('.fav-refresh').eq([favIndex]).text('Last refresh was at '+strTime);
@@ -25,6 +26,8 @@ $(document).ready(function(){
     }
 
   }
+
+  if ($('.tempLogin').text() && !$('.hp-banner').hasClass('no-favorites')) {
 
   $.ajax({
     url:`../data/${tempLogin}_favoriteStopTimes.json`,
@@ -101,7 +104,7 @@ $(document).ready(function(){
   },15000);
 
 
-
+}
 
 })
 

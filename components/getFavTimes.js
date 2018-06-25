@@ -35,6 +35,20 @@ const getFavs = function(req) {
   // User has a json object containing values and relevant information on which
   // stops have been designated favorite
   let data = JSON.parse(req.user.favorites);
+  let count = 0;
+
+
+  var dataFinished = ()=>{
+    console.log('Done early!');
+    clearTimeout(lastCallForData);
+    fs.writeFile(`./public/data/${tempLogin}_favoriteStopTimes.json`, JSON.stringify(data), (err) => {
+      if (err) {
+        console.log(err);
+      }
+      let time = new Date();
+      console.log('-------------------------------------- new file written at  ------------------------------------------');
+    });
+  }
 
   // if our static data file doesnt exist, write a baseline so that read function
   // does not throw error
@@ -55,12 +69,14 @@ const getFavs = function(req) {
   if (data.favorites.length !== 0) {
 
     // Writes file
-    setTimeout(function() {
+    var lastCallForData = setTimeout(function() {
+      console.log('last call');
       fs.writeFile(`./public/data/${tempLogin}_favoriteStopTimes.json`, JSON.stringify(data), (err) => {
         if (err) {
           console.log(err);
         }
-        console.log('-------------------------------------- new file written ------------------------------------------');
+        let time = new Date();
+        console.log('-------------------------------------- new file written at  ------------------------------------------');
       });
     }, 13000);
 
@@ -84,10 +100,14 @@ const getFavs = function(req) {
 
         for (let favItem of data['favorites']) {
           if (favItem.stopId === data.favorites[thisIndex].stopId) {
-            data.favorites[thisIndex].station = stopFetch.fetch(data.favorites[thisIndex].stopId, data.favorites[thisIndex].feedId, result, true);
             console.log('-------------------------------------- preparing to add ' + thisStop + ' to static data with the following --------------------------------------');
+            data.favorites[thisIndex].station = stopFetch.fetch(data.favorites[thisIndex].stopId, data.favorites[thisIndex].feedId, result, true);
             console.log(data.favorites[thisIndex].station);
             console.log(JSON.stringify(data));
+            count++;
+            if (count === data.favorites.length) {
+              dataFinished();
+            }
           }
         }
 

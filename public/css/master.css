@@ -256,6 +256,11 @@ h5.lastRefresh {
     padding-top: 0px;
 }
 
+.fav-single>.station-name {
+    margin-top: 20px;
+    line-height: 20px;
+}
+
 .time-item {
     background-color: white;
     border: 5px solid;
@@ -307,7 +312,6 @@ span.fav-line-name {
 
 span.fav-refresh {
     font-weight: 100;
-    margin-left: 7px;
     font-size: 14px;
     text-transform: uppercase;
 }
