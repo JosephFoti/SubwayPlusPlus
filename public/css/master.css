@@ -251,6 +251,11 @@ h5.lastRefresh {
 
 /*  Favorites  */
 
+.fav-feeder-wrap {
+    padding: 1.5%;
+    padding-top: 0px;
+}
+
 .time-item {
     background-color: white;
     border: 5px solid;
@@ -291,7 +296,12 @@ span.fav-line-name {
     overflow: auto;
     padding: 10px;
     margin: 5px;
+    margin-top: 2%;
     box-shadow: 0px 0px 7px -2px #6e6e6e;
+    color: black !important;
+    border-top: 5px solid;
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
 
 }
 

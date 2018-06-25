@@ -339,7 +339,8 @@ app.post('/favorite', (req, res) => {
       let newFav = {};
       newFav.stopId = req.body.stopId;
       newFav.feedId = req.body.feedId;
-      newFav.stationName = req.body.stationName
+      newFav.line = req.body.line;
+      newFav.stationName = req.body.stationName;
       favs.favorites.push(newFav);
       console.log(favs);
       console.log('^ ---------- favs pre-join --------- ^');

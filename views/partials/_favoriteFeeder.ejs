@@ -2,8 +2,8 @@
   <% if (favs.length) { %>
   <% for (let fav of favs) { %>
 
-    <div class="fav-single" data-stopId=<%= fav.stopId %>>
-      <span class="fav-line-name line-type-<%= fav.stopId[0] %>"><%= fav.stopId[0] %></span>
+    <div class="fav-single line-type-<%= fav.line %>" data-stopId=<%= fav.stopId %>>
+      <span class="fav-line-name line-type-<%= fav.line %>"><%= fav.line %></span>
 
     <h2 class="station-name"><%= fav.stationName %><span class="fav-refresh"></lastRefresh></h2>
     <div class="times-wrapper"></div>
