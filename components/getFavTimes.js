@@ -7,7 +7,9 @@ var mta = new Mta({
 
 const stopFetch = require('./stopFetch.js');
 
-const test = function(){console.log('getting the data.favorites!')};
+const test = function() {
+  console.log('getting the data.favorites!')
+};
 
 const getFavs = function(req) {
 
@@ -38,70 +40,56 @@ const getFavs = function(req) {
 
   }
 
-
   if (data.favorites.length !== 0) {
-    for (var i = 0; i < data.favorites.length; i++) {
-      const thisIndex = i
 
-      console.log('-------------------------------------- check stop & feed ------------------------------------------');
+
+    setTimeout(function() {
+      fs.writeFile(`./public/data/${tempLogin}_favoriteStopTimes.json`, JSON.stringify(data), (err) => {
+        if (err) {
+          console.log(err);
+        }
+        console.log('-------------------------------------- new file written ------------------------------------------');
+      });
+    }, 13000);
+
+    for (var i = 0; i < data.favorites.length; i++) {
+
+      const thisIndex = i
+      const thisStop = data.favorites[thisIndex].stopId;
+      console.log('-------------------------------------- check stop & feed for ' + thisStop + '------------------------------------------');
       console.log(data.favorites[thisIndex].stopId)
       console.log(data.favorites[thisIndex].feedId)
 
       mta.schedule(data.favorites[thisIndex].stopId, data.favorites[thisIndex].feedId).then(function(result) {
 
-        console.log(`favorite ${thisIndex} has been pulled from the mta, about to be fetched`);
+        console.log(`favorite ${thisStop} has been pulled from the mta, about to be fetched`);
 
         if (Object.keys(result).length === 0) {
           console.log('MTA error on data.favorites[' + thisIndex + ']');
           data.favorites[thisIndex].errorReport = 'Alas! No times are available';
         }
 
-        fs.readFile(`./public/data/${tempLogin}_favoriteStopTimes.json`, 'utf-8', (err,data)=>{
-          console.log('-------------------------------------- server reads file --------------------------------------');
-
-          if (err) {
-            console.log(`error in readFile: ${err}`);
+        for (let favItem of data['favorites']) {
+          if (favItem.stopId === data.favorites[thisIndex].stopId) {
+            data.favorites[thisIndex].station = stopFetch.fetch(data.favorites[thisIndex].stopId, data.favorites[thisIndex].feedId, result, true);
+            console.log('-------------------------------------- preparing to add ' + thisStop + ' to static data with the following --------------------------------------');
+            console.log(data.favorites[thisIndex].station);
+            console.log(JSON.stringify(data));
           }
-          // BUG: if the async events line up such that a read runs simultaneously with a unended write what happens?
-          console.log('-------------------------------------- Bug starts here --------------------------------------');
-          console.log(data);
-          data = JSON.parse(data)
-
-          // console.log(data['favorites']);
-          if (data['favorites'] === undefined) {
-            console.log(`-- error at favorite ${thisIndex} with type ${typeof data}`);
-            console.log(data)
-
-            return;
-          } else {
-            console.log(`++ success at favorite ${thisIndex} with type ${typeof data}`);
-            console.log(data)
-          }
-
-          for (let favItem of data['favorites']) {
-            if (favItem.stopId === data.favorites[thisIndex].stopId) {
-              data.favorites[thisIndex].station = stopFetch.fetch(data.favorites[thisIndex].stopId, data.favorites[thisIndex].feedId, result, true);
-              console.log('-------------------------------------- preparing to write static file with fav '+ thisIndex +' --------------------------------------');
-              // console.log(data.favorites);
-              fs.writeFile(`./public/data/${tempLogin}_favoriteStopTimes.json`, JSON.stringify(data), (err)=>{
-                if (err) {
-                  console.log(err);
-                }
-                console.log('-------------------------------------- new file written in loop ------------------------------------------');
-              });
-            }
-          }
-        });
+        }
 
       }).catch(x => console.log(x));
 
-
     }
-  }
 
+
+  }
 
 
 }
 
 
-module.exports = {test:test,getFavs:getFavs}
+module.exports = {
+  test: test,
+  getFavs: getFavs
+}
