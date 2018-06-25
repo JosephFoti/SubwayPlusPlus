@@ -15,7 +15,7 @@ $('document').ready(function(){
 
       const color = $(this).data('color');
 
-      TweenMax.to($(this),.25,{backgroundColor:color,color:'white'});
+      TweenMax.to($(this),.2,{backgroundColor:color,color:'white',ease:Power2.easeOut});
 
     })
 
@@ -24,7 +24,7 @@ $('document').ready(function(){
       const color = $(this).data('color');
       console.log(color);
 
-      TweenMax.to($(this),.25,{color:color,backgroundColor:'white'});
+      TweenMax.to($(this),.2,{color:color,backgroundColor:'white',ease:Power2.easeOut});
 
     })
 

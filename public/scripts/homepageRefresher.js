@@ -5,11 +5,10 @@ $(document).ready(function(){
   console.log(singles);
   console.log(tempLogin);
 
-  if (tempLogin) {
-
   $.ajax({
     url:`../data/${tempLogin}_favoriteStopTimes.json`,
     success: function(result) {
+      console.log('initiall ajax call');
       var result = result['favorites'];
       console.log(result['stopId'])
       let html = '';
@@ -45,7 +44,7 @@ $(document).ready(function(){
     $.ajax({
       url:`../data/${tempLogin}_favoriteStopTimes.json`,
       success: function(result) {
-
+        console.log('hello timeout!');
         var result = result['favorites'];
 
         let html = '';
@@ -79,7 +78,7 @@ $(document).ready(function(){
   },15000);
 
 
-}
+
 
 })
 

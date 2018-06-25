@@ -2,8 +2,8 @@ $('document').ready(function(){
 
   var stop = $('.lineWrap').children().children();
   console.log(stop);
-  TweenMax.staggerTo($(stop),.25,{alpha:1,marginTop:"5px"},.05);
-  TweenMax.to($('.hp-banner'),.75,{delay:2,height:"63px",borderBottomColor:"#828282",ease:Circ.easeOut});
+  TweenMax.staggerTo($(stop),.20,{delay:.75,alpha:1,marginTop:"5px"},.05);
+  TweenMax.to($('.hp-banner'),.75,{height:"63px",borderBottomColor:"#828282",ease:Circ.easeOut});
 
   $(stop).each(function(){
 

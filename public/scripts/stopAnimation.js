@@ -18,9 +18,11 @@ $('document').ready(function(){
   }
 
   timestamp = toPeriodFormat(timestamp);
-  console.log(timestamp);
+  $('.lastRefresh').text('Last refresh was at '+timestamp)
 
-  
+    setTimeout(function(){
+        $('.loader').fadeOut(500);
+    },1200)
 
     TweenMax.staggerTo($('.northbound').children('li'),1,{marginTop:"10px",delay:.7,ease:Back.easeOut.config(.35)},.25);
     TweenMax.staggerTo($('.southbound').children('li'),1,{marginTop:"10px",delay:1,ease:Back.easeOut.config(.35)},.25);
