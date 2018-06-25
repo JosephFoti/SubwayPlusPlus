@@ -316,6 +316,11 @@ span.fav-refresh {
     text-transform: uppercase;
 }
 
+span.time-item-line {
+    font-weight: 700;
+    margin-right: 20px;
+}
+
 /*  colors  */
 
 .line-type-1, .line-type-2, .line-type-3 {
@@ -371,4 +376,73 @@ span.fav-refresh {
 .line-type-SIR {
   color: #798BC6;
   border-color: #798BC6 !important;
+}
+
+/*  Media Queries  */
+
+@media screen and (max-width:786px) {
+
+  ul.time-container {
+      width: 100%;
+      margin: 0;
+      border: none;
+      padding-bottom: 15px;
+  }
+
+  li.time-item {
+      width: 100%;
+      border-left: none;
+      border-radius: 0px;
+      border-right: none;
+      border-width: 2px;
+      margin: 10px 0px 0px 0px;
+      border-top: none;
+      padding-bottom: 20px;
+      font-size: 20px;
+  }
+
+  .fav-single {
+      padding-left: 0px;
+      padding-right: 0px;
+  }
+
+  h3.station-type {
+      text-align: left;
+      font-size: 30px;
+      margin: 0px;
+      margin-left: 12px;
+  }
+
+  .times-wrapper {
+      width: 100%;
+      overflow: initial;
+  }
+
+  span.fav-line-name {
+      margin-left: 10px;
+  }
+
+  /* stops */
+
+  li.stop {
+    padding: 10px;
+  }
+
+  .lineWrap {
+      clear: both;
+      text-align: center;
+      overflow: auto;
+  }
+}
+
+@media screen and (max-width:1050px) and (min-width:786px) {
+
+  ul.time-container {
+    width: 100%;
+  }
+
+  .times-wrapper {
+    height: auto;
+  }
+
 }

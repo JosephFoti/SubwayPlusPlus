@@ -32,8 +32,9 @@ var stopFetch = function(thisStop, thisFeed, result, simple=false) {
         if (estCalc < 0) {
           estCalc = 0;
         }
+        var routeAndEst = [estCalc,station[0]['data'][i]['routeId']]
         station[0].est.push(estCalc);
-        estimates[0].est.push(estCalc);
+        estimates[0].est.push(routeAndEst);
       }
     }
     console.log('uptown ' + estimates[0].est)
@@ -43,14 +44,14 @@ var stopFetch = function(thisStop, thisFeed, result, simple=false) {
   if (station[1]['data']) {
     for (let i = 0; i < 3; i++) {
       if (station[1]['data'][i] && station[1]['data'][i]['departureTime']) {
-
         let estCalc = (station[1]['data'][i]['departureTime']).toString() + '000';
         estCalc = Math.floor((parseInt(estCalc) - time) / 60000);
         if (estCalc < 0) {
           estCalc = 0;
         }
+        var routeAndEst = [estCalc,station[1]['data'][i]['routeId']]
         station[1].est.push(estCalc);
-        estimates[1].est.push(estCalc);
+        estimates[1].est.push(routeAndEst);
       }
     }
     console.log('downtown ' + estimates[1].est)

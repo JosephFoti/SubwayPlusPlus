@@ -42,13 +42,13 @@ $(document).ready(function(){
         }
          html += `<ul class="time-container uptown"><h3 class="station-type">Uptown</h3>`
         for (let j=0; j<3; j++) {
-          html += `<li class="time-item line-type-${result[i]['stopId'][0]}">${result[i]['station'][0]['est'][j]}</li>`
+          html += `<li class="time-item line-type-${result[i]['stopId'][0]}"><span class="time-item-line">${result[i]['station'][0]['est'][j][1]}</span>${result[i]['station'][0]['est'][j][0]} Minutes</li>`
         }
           html += `</ul>`
 
           html += `<ul class="time-container downtown"><h3 class="station-type">Downtown</h3>`
         for (let j=0; j<3; j++) {
-          html += `<li class="time-item line-type-${result[i]['stopId'][0]}">${result[i]['station'][1]['est'][j]}</li>`
+          html += `<li class="time-item line-type-${result[i]['stopId'][0]}"><span class="time-item-line">${result[i]['station'][1]['est'][j][1]}</span>${result[i]['station'][1]['est'][j][0]} Minutes</li>`
         }
           html += `</ul>`
         // $(singles).eq(i).innerHTML(html);
@@ -65,43 +65,43 @@ $(document).ready(function(){
   });
 
 
-  setInterval(function(){
-    $.ajax({
-      url:`../data/${tempLogin}_favoriteStopTimes.json`,
-      success: function(result) {
-        console.log('hello timeout!');
-        var result = result['favorites'];
-
-        let html = '';
-        for (let i=0;i < result.length;i++) {
-          console.log('checking result '+i)
-          if (!result[i]['station']) {
-            break;
-          }
-           html += `<ul class="time-container uptown"><h3 class="station-type">Uptown</h3>`
-          for (let j=0; j<3; j++) {
-            html += `<li class="time-item line-type-${result[i]['stopId'][0]}">${result[i]['station'][0]['est'][j]}</li>`
-          }
-            html += `</ul>`
-
-            html += `<ul class="time-container downtown"><h3 class="station-type">Downtown</h3>`
-          for (let j=0; j<3; j++) {
-            html += `<li class="time-item line-type-${result[i]['stopId'][0]}">${result[i]['station'][1]['est'][j]}</li>`
-          }
-            html += `</ul>`
-          // $(singles).eq(i).innerHTML(html);
-
-        singles[i].innerHTML = html;
-        html = '';
-        getLastRefresh(i);
-        }
-      },
-      failure: function(err) {
-        console.log('something went wrong!');
-        console.log(err);
-      }
-    });
-  },15000);
+  // setInterval(function(){
+  //   $.ajax({
+  //     url:`../data/${tempLogin}_favoriteStopTimes.json`,
+  //     success: function(result) {
+  //       console.log('hello timeout!');
+  //       var result = result['favorites'];
+  //
+  //       let html = '';
+  //       for (let i=0;i < result.length;i++) {
+  //         console.log('checking result '+i)
+  //         if (!result[i]['station']) {
+  //           break;
+  //         }
+  //          html += `<ul class="time-container uptown"><h3 class="station-type">Uptown</h3>`
+  //         for (let j=0; j<3; j++) {
+  //           html += `<li class="time-item line-type-${result[i]['stopId'][0]}"><span class="time-item-line">${result[i]['station'][0]['est'][j][1]}</span>${result[i]['station'][0]['est'][j][0]} Minutes</li>`
+  //         }
+  //           html += `</ul>`
+  //
+  //           html += `<ul class="time-container downtown"><h3 class="station-type">Downtown</h3>`
+  //         for (let j=0; j<3; j++) {
+  //           html += `<li class="time-item line-type-${result[i]['stopId'][0]}"><span class="time-item-line">${result[i]['station'][1]['est'][j][1]}</span>${result[i]['station'][1]['est'][j][0]} Minutes</li>`
+  //         }
+  //           html += `</ul>`
+  //         // $(singles).eq(i).innerHTML(html);
+  //
+  //       singles[i].innerHTML = html;
+  //       html = '';
+  //       getLastRefresh(i);
+  //       }
+  //     },
+  //     failure: function(err) {
+  //       console.log('something went wrong!');
+  //       console.log(err);
+  //     }
+  //   });
+  // },15000);
 
 
 }
