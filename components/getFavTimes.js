@@ -5,6 +5,7 @@ var mta = new Mta({
   feed_id: 1 // optional, default = 1
 });
 
+// gets parsed times from the MTA data
 const stopFetch = require('./stopFetch.js');
 
 const test = function() {
@@ -12,6 +13,21 @@ const test = function() {
 };
 
 const getFavs = function(req) {
+
+
+  /*
+
+  Loop through each favorited stop stored in the database for a given user, get
+  it's stopID and feedID and launch an ansynchronous call to the MTA. When/if data
+  is received, run the stopFetch and assign the result to the station value of
+  the matching favorited stop. Station will contain estimates of the next three
+  trains. The timeout function will fire 13 seconds after this function is
+  called and write whatever data has been recieved and defined to a static file
+  for the user. Client side calls the static value and renders new information
+  on a 15s interval.
+
+  */
+
 
   // temp login to display username on page
   tempLogin = req.user.username;
@@ -24,15 +40,10 @@ const getFavs = function(req) {
   // does not throw error
   if (!fs.existsSync(`./public/data/${tempLogin}_favoriteStopTimes.json`)) {
 
-    // NOTE: We can use this to set a temporary loader on start
-    console.log('-------------------------------------- File NDE ------------------------------------------');
-
-    console.log('base favorite file did not exist!');
-    console.log('writing file with following string');
-    console.log(JSON.stringify(data));
+    console.log('-------------------------------------- Favorites File NDE ------------------------------------------');
     // make static file for user so that each user can interact individually with their data
     fs.writeFile(`./public/data/${tempLogin}_favoriteStopTimes.json`, JSON.stringify(data), (err) => {
-      console.log('-------------------------------------- new file written ------------------------------------------');
+      console.log('-------------------------------------- New Favorites File written ------------------------------------------');
       if (err) {
         console.log(err);
       }
@@ -40,9 +51,10 @@ const getFavs = function(req) {
 
   }
 
+
   if (data.favorites.length !== 0) {
 
-
+    // Writes file
     setTimeout(function() {
       fs.writeFile(`./public/data/${tempLogin}_favoriteStopTimes.json`, JSON.stringify(data), (err) => {
         if (err) {
@@ -60,6 +72,7 @@ const getFavs = function(req) {
       console.log(data.favorites[thisIndex].stopId)
       console.log(data.favorites[thisIndex].feedId)
 
+      // MTA data pull for stop times
       mta.schedule(data.favorites[thisIndex].stopId, data.favorites[thisIndex].feedId).then(function(result) {
 
         console.log(`favorite ${thisStop} has been pulled from the mta, about to be fetched`);
