@@ -209,14 +209,14 @@ app.get('/lines/:line', (req, res) => {
 
 });
 
-app.get('/stops/:stop&:feedId&:stationName', (req, res) => {
+app.get('/stops/:stop&:feedId&:stationName&:line', (req, res) => {
   // let lineInt = (parseInt(req.params.line[4]) - 1);
   // console.log(req.params.feedId);
   // console.log(req.params.stop);
-
-  var thisStop = req.params.stop.toString();
-  var thisFeed = req.params.feedId.toString();
-  var stationName = req.params.stationName.split('+').join(' ');
+  let thisLine = req.params.line.toString();
+  let thisStop = req.params.stop.toString();
+  let thisFeed = req.params.feedId.toString();
+  let stationName = req.params.stationName.split('+').join(' ');
 
   // Get the stop and line from req params and use them to plug in the correct datapoint in the stops.json
   // data file. Use the data-tester to make a dictionary, use dictionary as href and call the stop.
@@ -247,8 +247,10 @@ app.get('/stops/:stop&:feedId&:stationName', (req, res) => {
       station: station,
       stop: thisStop,
       feed: thisFeed,
+      line: thisLine,
       username: username,
       tempLogin: username
+
     });
   }).catch(x => console.log(x));
 

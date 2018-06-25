@@ -27,15 +27,15 @@
     </form>
   </div>
 
-  <h2 class="subtitle"><%= station.name %></h2>
+  <h2 class="subtitle"><%= line %> Line, <%= station.name %></h2>
 
-  <ul class="times-wrapper">
+  <ul class="times-wrapper northbound">
     <h2>Northbound</h2>
     <% for (let i=0;i<station[1]['est'].length;i++) { %>
       <% var train = station[0]['data'][i] %>
       <% if (!train) continue %>
 
-      <li class="line-type-<%= train['routeId'] %>">
+      <li class="line-type-<%= train['routeId'] %> est-container">
         <strong style="margin-right:20px;"><%= train['routeId'] %></strong>
         <span class="est" data-index=<%= i %>><%= station[0]['est'][i] %> Minutes</span>
       </li>
@@ -43,13 +43,13 @@
 
   </ul>
 
-  <ul class="times-wrapper">
+  <ul class="times-wrapper southbound">
     <h2>Southbound</h2>
     <% for (let i=0;i<station[1]['est'].length;i++) { %>
       <% var train = station[1]['data'][i] %>
       <% if (!train) continue %>
 
-      <li class="line-type-<%= train['routeId'] %>">
+      <li class="line-type-<%= train['routeId'] %> est-container">
         <strong style="margin-right:20px;"><%= train['routeId'] %></strong>
         <span class="est" data-index=<%= i %>><%= station[1]['est'][i] %> Minutes</span>
       </li>
@@ -58,6 +58,9 @@
 
 </body>
 <footer>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.1/TweenMax.min.js"></script>
+  <script type="text/javascript" src="/scripts/stopAnimation.js"></script>
   <script type="text/javascript" src="/scripts/autoRefreshTemp.js"></script>
 </footer>
 </html>
