@@ -1,6 +1,16 @@
-var stopFetch = function(thisStop, thisFeed, result) {
+/*
+
+Stopfetch takes the data received from the mta schedule module (the times of
+expected trains) and parses them into readable minutes until arrival estimates.
+estimates are pushed into a station array which is then applied into the data for
+the favoried line to be written into
+
+*/
+
+var stopFetch = function(thisStop, thisFeed, result, simple=false) {
 
   var station = [];
+  var estimates = [{"est":[]},{"est":[]}];
   station[0] = {
     data: result['schedule'][thisStop]["N"] || null
   }
@@ -9,10 +19,7 @@ var stopFetch = function(thisStop, thisFeed, result) {
   }
   station[0].est = [];
   station[1].est = [];
-
-
-  // let html1 = `<ul><h2>Northbound</h2>`
-  // let html2 = `<ul><h2>Southbound</h2>`
+  console.log(thisStop);
 
   let time = new Date();
   time = time.getTime();
@@ -25,33 +32,36 @@ var stopFetch = function(thisStop, thisFeed, result) {
         if (estCalc < 0) {
           estCalc = 0;
         }
-        console.log(estCalc);
+        var routeAndEst = [estCalc,station[0]['data'][i]['routeId']]
         station[0].est.push(estCalc);
+        estimates[0].est.push(routeAndEst);
       }
     }
+    console.log('uptown ' + estimates[0].est)
   }
-  console.log(station[0]['data']);
 
 
   if (station[1]['data']) {
     for (let i = 0; i < 3; i++) {
       if (station[1]['data'][i] && station[1]['data'][i]['departureTime']) {
-
         let estCalc = (station[1]['data'][i]['departureTime']).toString() + '000';
         estCalc = Math.floor((parseInt(estCalc) - time) / 60000);
         if (estCalc < 0) {
           estCalc = 0;
         }
-        console.log(estCalc);
+        var routeAndEst = [estCalc,station[1]['data'][i]['routeId']]
         station[1].est.push(estCalc);
+        estimates[1].est.push(routeAndEst);
       }
     }
+    console.log('downtown ' + estimates[1].est)
   }
-  console.log(station[1]['data']);
 
-  // console.log('--------------------------- Stop Fetch Ran ---------------------------');
-  // console.log(station);
-  return station;
+if (simple) {
+  return estimates;
+}
+
+return station;
 
 }
 

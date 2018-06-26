@@ -2,21 +2,29 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
     <title>Register</title>
     <link rel="stylesheet" href="/css/master.css">
     <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:300,400,700" rel="stylesheet">
   </head>
   <body>
+
     <%- include partials/_navbar %>
 
-      <h1>Register</h1>
-      <h3>Sign up to save your favorite stops for quick reference</h3>
+    <div class="login-wrapper">
 
-      <form class="" action="/register" method="post">
-        <label>Username: </label><input type="text" name="username" value="" /><br/>
-        <label>Password: </label><input type="password" name="password" value="" /><br/>
-        <label>Email: </label><input type="text" name="email" value="" /><br/>
+      <h1>Register</h1>
+      <h4>Sign up to save your favorite stops for quick reference</h4>
+
+      <form class="main-form" action="/register" method="post">
+        <label>Username</label><br/><input type="text" name="username" value="" />
+        <label>Password</label><br/><input type="password" name="password" value="" />
+        <label>Email</label><br/><input type="text" name="email" value="" />
         <button type="submit" name="button">register</button>
       </form>
+
+    </div>
+
   </body>
 </html>

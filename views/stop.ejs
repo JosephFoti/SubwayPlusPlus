@@ -3,6 +3,8 @@
 
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
   <title>
     <%= stop %>
   </title>
@@ -11,13 +13,19 @@
 </head>
 
 <body>
+  <div class="banner line-type-<%= line %>">
+
+  </div>
   <%- include partials/_navbar %>
 
+  <div class="hp-banner" style="height:110px">
+
   <div class="favoriteBtnWrap">
-    <form class="" action="/favorite" method="post">
+    <form class="favorite-form" action="/favorite" method="post">
       <input type="text" name="username" style="display:none;" value=<%= username %>  />
       <input type="text" name="stopId" style="display:none;" value=<%= stop %>  />
       <input type="text" name="feedId" style="display:none;" value=<%= feed %>  />
+      <input type="text" name="line" style="display:none;" value=<%= line %>  />
       <input type="text" name="stationName" style="display:none;" value="<%= `${station.name}` %>" />
 
 
@@ -25,15 +33,17 @@
     </form>
   </div>
 
-  <h2 class="stationName"><%= station.name %></h2>
+  <h2 class="subtitle"><%= line %> Line, <%= station.name %></h2>
+  <h5 class="lastRefresh"></h5>
+</div>
 
-  <ul>
-    <h2>Northbound</h2>
+  <ul class="times-wrapper northbound">
+    <h2>Northbound<img class="loader" src="../assets/loading.svg"/></h2>
     <% for (let i=0;i<station[1]['est'].length;i++) { %>
       <% var train = station[0]['data'][i] %>
       <% if (!train) continue %>
 
-      <li>
+      <li class="line-type-<%= train['routeId'] %> est-container">
         <strong style="margin-right:20px;"><%= train['routeId'] %></strong>
         <span class="est" data-index=<%= i %>><%= station[0]['est'][i] %> Minutes</span>
       </li>
@@ -41,13 +51,13 @@
 
   </ul>
 
-  <ul>
-    <h2>Southbound</h2>
+  <ul class="times-wrapper southbound">
+    <h2>Southbound<img class="loader" src="../assets/loading.svg"/></h2>
     <% for (let i=0;i<station[1]['est'].length;i++) { %>
       <% var train = station[1]['data'][i] %>
       <% if (!train) continue %>
 
-      <li>
+      <li class="line-type-<%= train['routeId'] %> est-container">
         <strong style="margin-right:20px;"><%= train['routeId'] %></strong>
         <span class="est" data-index=<%= i %>><%= station[1]['est'][i] %> Minutes</span>
       </li>
@@ -56,6 +66,9 @@
 
 </body>
 <footer>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.1/TweenMax.min.js"></script>
+  <script type="text/javascript" src="/scripts/stopAnimation.js"></script>
   <script type="text/javascript" src="/scripts/autoRefreshTemp.js"></script>
 </footer>
 </html>

@@ -2,6 +2,8 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
     <title>Subway++ | Take less time to get your times</title>
     <link rel="stylesheet" href="/css/master.css">
     <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:300,400,700" rel="stylesheet">
@@ -9,6 +11,7 @@
   <body>
 
     <%- include partials/_navbar %>
+<<<<<<< HEAD
     <h1>Subway++</h1>
     <h4>Your one stop for all of your subway time needs</h4>
     <hr/>
@@ -16,13 +19,34 @@
     <%- include partials/_favoriteFeeder.ejs %>
     <% } %>
     <h2>Lines</h2>
+=======
+    <% if (tempLogin.length > 0 && favs == false) { %>
+      <div class="hp-banner no-favorites" style="height: 60px;border-bottom: 1px solid #828282;">
+      <h4>Navigate to your favorite stops and click 'favorite' to have them display on your homepage</h4>
+      </div>
+    <% } else if (tempLogin.length === 0) { %>
+      <div class="hp-banner no-login" style="height: 80px;border-bottom: 1px solid #828282;">
+      <h4>Your one stop for all of your subway time needs</br>Select a subway line below to begin or register to save your favoite lines</h4>
+      </div>
+    <% } else { %>
+      <div class="hp-banner login-and-favorites" style="height: fit-content;text-align:center">
+      <h2 style="margin-top: 40px;">Your Favorites</h2>
+      </div>
+    <% } %>
+
+
+    <%- include partials/_favoriteFeeder.ejs %>
+    <h2 class="subtitle">Lines</h2>
+>>>>>>> b244f0014e42ae427ac75e048d2ad5d68d033a40
     <% for (line of lineNames) { %>
-      <a href=<%= `/lines/${line}`%> ><div class="lineName" data-line=<%= line %>><%= line %></div></a>
+      <a class="line-wrap" href=<%= `/lines/${line}`%> ><div class="line-name line-type-<%= line %>" data-line=<%= line %>><%= line %></div></a>
     <% } %>
 
   </body>
   <footer>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.1/TweenMax.min.js"></script>
     <script type="text/javascript" src="/scripts/homepageRefresher.js"></script>
+    <script type="text/javascript" src="/scripts/hpAnimation.js"></script>
   </footer>
 </html>

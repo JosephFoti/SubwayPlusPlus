@@ -1,3 +1,5 @@
+// NOTE NOTE NOTE  Test case for simple scrape data
+
 const ejs = require('ejs')
 const http = require('http');
 const fs = require('fs');
@@ -17,6 +19,8 @@ const stopFetch = require('./components/stopFetch.js');
 const getFeed = require('./components/getFeed.js');
 const getFavs = require('./components/getFavTimes.js');
 
+const dotenv = require('dotenv');
+const result = dotenv.config();
 
 app.set('view engine', 'ejs');
 app.use(bodyParser.json());
@@ -25,24 +29,26 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(express.static('public'));
 
+const PORT = process.env.PORT || 3000
 
 
 const Op = Sequelize.Op
-// const sequelize = new Sequelize('barkspace', postgres_user, postgres_pass, {
-const sequelize = new Sequelize('subwayplusplus', 'postgres', 'Giraffes94', {
+const sequelize = new Sequelize(process.env.DATABASE_URL,  {
+// const sequelize = new Sequelize('barkspace', 'postgres', 'Giraffes94', {
 
-  // host: 'localhost',
-  // port: '5432',
-  dialect: 'postgres',
-  operatorsAliases: {
-    $and: Op.and,
-    $or: Op.or,
-    $eq: Op.eq,
-    $regexp: Op.regexp,
-    $iRegexp: Op.iRegexp,
-    $like: Op.like,
-    $iLike: Op.iLike
-  }
+	logging: true,
+	ssl: true,
+	dialect: 'postgres',
+	protocol: 'postgres',
+	operatorsAliases:{
+		$and: Op.and,
+		$or: Op.or,
+		$eq: Op.eq,
+		$regexp: Op.regexp,
+		$iRegexp: Op.iRegexp,
+		$like: Op.like,
+		$iLike: Op.iLike
+	}
 })
 
 
@@ -141,31 +147,9 @@ app.get('/', (req, res) => {
       tempLogin = ''
   } else {
     tempLogin = req.user.username;
-<<<<<<< HEAD
-    let data = JSON.parse(req.user.favorites);
-    // console.log('--------------------------------------------------------------------------------');
-    // console.log('data.favorites');
-    //
-    // console.log(data.favorites);
-    // console.log('--------------------------------------------------------------------------------');
-    let favs = data.favorites
-
-    fs.writeFile(`${__dirname}/public/data/favoriteStopTimes.json`, JSON.stringify(data), (err) => {
-      console.log('-------------------------------------- new file written ------------------------------------------');
-      if (err) {
-        console.log(err);
-      }
-    });
-    console.log(favs);
-    if (favs.length !== 0) {
-      for (var i = 0; i < favs.length; i++) {
-        const thisIndex = i
-        mta.schedule(favs[thisIndex].stopId, favs[thisIndex].feedId).then(function(result) {
-=======
   }
 
   console.log(tempLogin);
->>>>>>> b244f0014e42ae427ac75e048d2ad5d68d033a40
 
   getFavs.test();
 
@@ -398,7 +382,7 @@ app.post('/stopData', (req, res) => {
   clearInterval(dataPull);
 })
 
-app.listen(8080, function(err) {
+app.listen(PORT, function(err) {
   if (err) throw err;
   console.log('server');
 });

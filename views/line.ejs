@@ -3,20 +3,30 @@
 
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
   <title><%= line %> Line</title>
   <link rel="stylesheet" href="/css/master.css">
   <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:300,400,700" rel="stylesheet">
 </head>
 
 <body>
+  <div class="banner line-type-<%= line %>"></div>
   <%- include partials/_navbar %>
-  <h2 class="lineTitle"><%= line %></h2>
-  <div class="lineWrap" data-line=<%= line %>>
-    <h3 class="title" style="text-align:center;"><%= line %> contains <%= stops.length %> stops </h1>
+  <div class="hp-banner">
+  <h4>Select a stop to view train times. You may also create an account and save your favorite lines to see them on your hompage</h4>
   </div>
+
+  <h2 class="lineTitle subtitle"><%= line %></h2>
+  <div class="lineWrap" data-line=<%= line %>>
   <% for (let stop of stops) { %>
-    <a href=<%=`/stops/${stop[0]}&${feedId}&${stop[1].split(' ').join('+')}`%>><li class='stop'><%= stop[1] %></li></a>
+    <a href=<%=`/stops/${stop[0]}&${feedId}&${stop[1].split(' ').join('+')}&${line}`%>><li class='line-type-<%= line %> stop'><%= stop[1] %></li></a>
   <% } %>
+  </div>
 </body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.1/TweenMax.min.js"></script>
+<script type="text/javascript" src="/scripts/lineAnimation.js"></script>
 
 </html>

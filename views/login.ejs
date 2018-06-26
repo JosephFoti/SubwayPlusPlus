@@ -2,18 +2,29 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
     <title>Login</title>
+    <link rel="stylesheet" href="/css/master.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:300,400,700" rel="stylesheet">
+
   </head>
   <body>
+
     <%- include partials/_navbar %>
 
-      <h1>Login</h1>
-      <h3>Get back to your custom subway feed</h3>
+    <div class="login-wrapper">
 
-      <form class="" action="/login" method="post">
-        <label>Username: </label><input type="text" name="username" value="" /><br/>
-        <label>Password: </label><input type="password" name="password" value="" /><br/>
-        <button type="submit" name="button">register</button>
+      <h1 class="title">Login</h1>
+      <h4>Get back to your custom subway feed</h4>
+
+      <form class="main-form" action="/login" method="post">
+        <label>Username:</label></br><input type="text" name="username" value="" /><br/>
+        <label>Password:</label></br><input type="password" name="password" value="" /><br/>
+        <button type="submit" name="button">Log In</button>
       </form>
+
+    </div>
+
   </body>
 </html>
