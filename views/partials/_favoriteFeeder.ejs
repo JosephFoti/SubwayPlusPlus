@@ -1,15 +1,23 @@
 <div class="fav-feeder-wrap">
   <% if (favs.length) { %>
-  <% for (let fav of favs) { %>
+    <% let count = 0 %>
+    <% for (let fav of favs) { %>
 
     <div class="fav-single line-type-<%= fav.line %>" data-stopId=<%= fav.stopId %>>
       <span class="fav-line-name line-type-<%= fav.line %>"><%= fav.line %></span>
 
     <h2 class="station-name"><%= fav.stationName %></br><span class="fav-refresh"></lastRefresh></h2>
+
+      <form class="remove-favorite" action="/remove" method="post">
+        <input style="display:none;" type="text" name="username" value="<%= tempLogin %>">
+        <input style="display:none;" type="number" name="favIndex" value="<%= count %>">
+        <button class="remove-button" type="submit">Remove</button>
+      </form>
+
     <div class="times-wrapper"></div>
     </div>
 
-
-  <% } %>
-  <% } %>
+      <% count++ %>
+    <% } %>
+    <% } %>
 </div>

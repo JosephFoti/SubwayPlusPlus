@@ -259,6 +259,7 @@ h5.lastRefresh {
 .fav-single>.station-name {
     margin-top: 20px;
     line-height: 20px;
+    margin-bottom: 0px;
 }
 
 .time-item {
@@ -320,6 +321,26 @@ span.fav-refresh {
 span.time-item-line {
     font-weight: 700;
     margin-right: 20px;
+}
+
+button.remove-button {
+    border-radius: 0px !important;
+    padding: 5px 10px;
+    background-color: white;
+    box-shadow: none;
+    border-color: black;
+    font-size: 15px;
+    text-transform: uppercase;
+    font-family: 'Roboto Condensed', sans-serif;
+    cursor: pointer;
+    float: right;
+}
+
+form.remove-favorite {
+    position: relative;
+    width: 100%;
+    bottom: 62px;
+    float: right;
 }
 
 /*  colors  */
@@ -423,6 +444,10 @@ span.time-item-line {
       margin-left: 10px;
   }
 
+  .downtown > h3.station-type {
+    margin-top: 15px;
+  }
+
   /* Line */
 
   .lineWrap {
@@ -475,6 +500,12 @@ form.favorite-form>button {
     padding-top: 40px;
     padding-bottom: 0px;
     margin-bottom: -20px;
+}
+
+
+
+button.remove-button {
+    margin-right: 12px;
 }
 
 }

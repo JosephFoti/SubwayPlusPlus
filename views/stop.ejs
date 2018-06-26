@@ -26,16 +26,22 @@
       <input type="text" name="stopId" style="display:none;" value=<%= stop %>  />
       <input type="text" name="feedId" style="display:none;" value=<%= feed %>  />
       <input type="text" name="line" style="display:none;" value=<%= line %>  />
-      <input type="text" name="stationName" style="display:none;" value="<%= `${station.name}` %>" />
+      <input type="text" name="stationName" style="display:none;" value="<%= `${stationName}` %>" />
 
 
       <button type="submit" name="button">favorite</button>
     </form>
   </div>
 
-  <h2 class="subtitle"><%= line %> Line, <%= station.name %></h2>
+  <h2 class="subtitle"><%= line %> Line, <%= stationName %></h2>
   <h5 class="lastRefresh"></h5>
 </div>
+
+<% if (errorReport.length > 0) { %>
+
+  <h4 class="subtitle"><%= errorReport %></h4>
+
+<% } else { %>
 
   <ul class="times-wrapper northbound">
     <h2>Northbound<img class="loader" src="../assets/loading.svg"/></h2>
@@ -63,6 +69,8 @@
       </li>
     <% } %>
   </ul>
+
+<% } %>
 
 </body>
 <footer>

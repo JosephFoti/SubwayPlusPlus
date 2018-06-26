@@ -219,6 +219,13 @@ app.get('/stops/:stop&:feedId&:stationName&:line', (req, res) => {
   // let lineInt = (parseInt(req.params.line[4]) - 1);
   // console.log(req.params.feedId);
   // console.log(req.params.stop);
+
+  if (req.user) {
+    var username = req.user.username;
+  } else {
+    var username = '';
+  }
+
   let thisLine = req.params.line.toString();
   let thisStop = req.params.stop.toString();
   let thisFeed = req.params.feedId.toString();
@@ -231,9 +238,14 @@ app.get('/stops/:stop&:feedId&:stationName&:line', (req, res) => {
 
     if (Object.keys(result).length === 0) {
       console.log('no data');
-      return res.render('stopError', {
+
+      return res.render('stop', {
         errorReport: 'Alas! No times are available',
+        stationName: stationName,
         stop: thisStop,
+        feed: thisFeed,
+        line: thisLine,
+        username: username,
         tempLogin: username
       });
     }
@@ -243,14 +255,10 @@ app.get('/stops/:stop&:feedId&:stationName&:line', (req, res) => {
     let station = stopFetch.fetch(thisStop, thisFeed, result);
     station.name = stationName;
 
-    if (req.user) {
-      var username = req.user.username;
-    } else {
-      var username = '';
-    }
     return res.render('stop', {
       errorReport: '',
       station: station,
+      stationName: stationName,
       stop: thisStop,
       feed: thisFeed,
       line: thisLine,
@@ -368,6 +376,31 @@ app.post('/favorite', (req, res) => {
       });
     }
   });
+});
+
+app.post('/remove',(req,res)=>{
+  tempLogin = req.body.username;
+  favIndex = req.body.favIndex;
+
+  User.findOne({
+    where: {
+      username: {
+        $iLike: req.body.username
+      }
+    }
+  }).then(user=>{
+    var oldFavorites = JSON.parse(user.dataValues.favorites);
+    console.log(oldFavorites.favorites[favIndex]);
+    oldFavorites.favorites.splice(favIndex,1);
+    var newFavorites = oldFavorites
+
+    user.updateAttributes({
+      favorites: JSON.stringify(newFavorites)
+    }).then(()=>{
+      return res.redirect('/');
+    })
+  })
+
 })
 
 
@@ -376,6 +409,7 @@ app.post('/stopData', (req, res) => {
   clearInterval(dataPull);
 })
 
+// NOTE: Always check the PORT
 app.listen(8080, function(err) {
   if (err) throw err;
   console.log('server');
