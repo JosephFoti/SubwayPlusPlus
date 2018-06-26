@@ -26,7 +26,15 @@ $('document').ready(function(){
         $('.loader').fadeOut(500);
     },1200)
 
-    TweenMax.staggerTo($('.northbound').children('li'),1,{marginTop:"10px",delay:.7,ease:Back.easeOut.config(.35)},.25);
-    TweenMax.staggerTo($('.southbound').children('li'),1,{marginTop:"10px",delay:1,ease:Back.easeOut.config(.35)},.25);
+    if ($(window).width() > 767) {
+      TweenMax.staggerTo($('.northbound').children('li'),1,{marginTop:"10px",delay:.7,ease:Back.easeOut.config(.35)},.25);
+      TweenMax.staggerTo($('.southbound').children('li'),1,{marginTop:"10px",delay:1,ease:Back.easeOut.config(.35)},.25);
+    } else {
+      $('.times-wrapper').children('li').css('opacity','0');
+      TweenMax.staggerTo($('.northbound').children('li'),1,{alpha:1,delay:.5},.25)
+      TweenMax.staggerTo($('.southbound').children('li'),1,{alpha:1,delay:.5},.25)
+    }
+
+
 
 });

@@ -183,7 +183,7 @@ h5.lastRefresh {
 }
 
 .banner {
-    width: 100%;
+    width: calc(100% - 4px);
     border: 2px solid;
 }
 
@@ -274,6 +274,7 @@ h5.lastRefresh {
     width:48%;
     margin: 1%;
     float:left;
+    border-bottom:none;
 }
 
 .times-wrapper {
@@ -422,11 +423,7 @@ span.time-item-line {
       margin-left: 10px;
   }
 
-  /* stops */
-
-  li.stop {
-    padding: 10px;
-  }
+  /* Line */
 
   .lineWrap {
       clear: both;
@@ -434,7 +431,52 @@ span.time-item-line {
       overflow: auto;
   }
 
-  /*    */
+  li.stop {
+    width: calc( 100% - 60px);
+    margin: 5px 15px;
+    padding: 10px;
+  }
+
+  /*  Stop  */
+
+  ul.times-wrapper {
+    margin: 0px;
+    clear: both;
+    overflow: auto;
+    height: fit-content;
+    width: 100%;
+}
+
+li.est-container {
+    width: calc(100% - 16px);
+    float: none;
+    margin: 8px;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.times-wrapper>h2 {
+    text-align: center;
+}
+
+form.favorite-form {
+    top: unset;
+    width: 100%;
+    left: 9px;
+    position: absolute;
+    top: 75px;
+}
+
+form.favorite-form>button {
+    width: calc(100% - 16px);
+}
+
+.hp-banner {
+    padding-top: 40px;
+    padding-bottom: 0px;
+    margin-bottom: -20px;
+}
+
 }
 
 @media screen and (max-width:1050px) and (min-width:786px) {
