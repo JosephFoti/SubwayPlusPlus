@@ -11,15 +11,6 @@
   <body>
 
     <%- include partials/_navbar %>
-<<<<<<< HEAD
-    <h1>Subway++</h1>
-    <h4>Your one stop for all of your subway time needs</h4>
-    <hr/>
-    <% if (favs) { %>
-    <%- include partials/_favoriteFeeder.ejs %>
-    <% } %>
-    <h2>Lines</h2>
-=======
     <% if (tempLogin.length > 0 && favs == false) { %>
       <div class="hp-banner no-favorites" style="height: 60px;border-bottom: 1px solid #828282;">
       <h4>Navigate to your favorite stops and click 'favorite' to have them display on your homepage</h4>
@@ -37,7 +28,6 @@
 
     <%- include partials/_favoriteFeeder.ejs %>
     <h2 class="subtitle">Lines</h2>
->>>>>>> b244f0014e42ae427ac75e048d2ad5d68d033a40
     <% for (line of lineNames) { %>
       <a class="line-wrap" href=<%= `/lines/${line}`%> ><div class="line-name line-type-<%= line %>" data-line=<%= line %>><%= line %></div></a>
     <% } %>

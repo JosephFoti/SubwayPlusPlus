@@ -141,31 +141,9 @@ app.get('/', (req, res) => {
       tempLogin = ''
   } else {
     tempLogin = req.user.username;
-<<<<<<< HEAD
-    let data = JSON.parse(req.user.favorites);
-    // console.log('--------------------------------------------------------------------------------');
-    // console.log('data.favorites');
-    //
-    // console.log(data.favorites);
-    // console.log('--------------------------------------------------------------------------------');
-    let favs = data.favorites
-
-    fs.writeFile(`${__dirname}/public/data/favoriteStopTimes.json`, JSON.stringify(data), (err) => {
-      console.log('-------------------------------------- new file written ------------------------------------------');
-      if (err) {
-        console.log(err);
-      }
-    });
-    console.log(favs);
-    if (favs.length !== 0) {
-      for (var i = 0; i < favs.length; i++) {
-        const thisIndex = i
-        mta.schedule(favs[thisIndex].stopId, favs[thisIndex].feedId).then(function(result) {
-=======
   }
 
   console.log(tempLogin);
->>>>>>> b244f0014e42ae427ac75e048d2ad5d68d033a40
 
   getFavs.test();
 
