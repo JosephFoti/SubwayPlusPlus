@@ -5,9 +5,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const Sequelize = require('sequelize')
 const passport = require('passport');
-const {
-  Client
-} = require('pg')
+const { Client } = require('pg');
 const Strategy = require('passport-local').Strategy;
 const cookieParser = require('cookie-parser');
 const flash = require('connect-flash');
@@ -135,37 +133,32 @@ var mta = new Mta({
 
 // Static list of posible train lines
 let lineNames = ['1', '2', '3', '4', '5', '6', '7', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'J', 'L', 'M', 'N', 'Q', 'R', 'S', 'W', 'Z', 'SIR'];
-// var tempLogin = '';
-
 var dataPull;
 
 // Home route displaying lines and user defined favoried stops
 app.get('/', (req, res) => {
 
-  if (!req.user) {
-      tempLogin = ''
-  } else {
-    tempLogin = req.user.username;
-  }
-
-  console.log(tempLogin);
-
-  getFavs.test();
+  tempLogin = ''
 
   if (req.user) {
 
+    tempLogin = req.user.username;
+
+    // Sets continuous time updates for favorites
     dataPull = setInterval(function() {
       getFavs.getFavs(req);
     }, 15000);
 
+    // Session killer after 10 minutes
     setTimeout(function() {
       clearInterval(dataPull);
     }, 600000);
 
-    tempLogin = req.user.username;
     let data = JSON.parse(req.user.favorites);
     let favs = data.favorites;
 
+    // fetches the time information for user's selected favorites
+    // and pushes them to a public data file for that user
     getFavs.getFavs(req);
 
     return res.render('home', {
@@ -180,35 +173,15 @@ app.get('/', (req, res) => {
     tempLogin: tempLogin,
     favs: false
   });
-})
-
-// switch case for assigning lines to MTA Realtime API 'feeds'
+});
 
 
-// Reads json file with the lists of stopIds, on completion renders the line page
-var getStops = function(feedId, line, res) {
-
-  // console.log(`getting stops for ${feedId}`);
-  fs.readFile(`StaticData/FullSimple.json`, 'utf-8', function(err, result) {
-    let stops = JSON.parse(result);
-    // console.log(`readFile complete`);
-    // console.log(stops[`line${line}`]);
-    return res.render('line', {
-      line: line,
-      stops: stops[`line${line}`],
-      feedId: feedId,
-      tempLogin: tempLogin
-    });
-  })
-
-}
-
-
-// route to call Line page w/ stops
+// Line page with designated line as parameter
 app.get('/lines/:line', (req, res) => {
   var line = req.params.line;
 
-  // references a swtch case for parsing feeds that correspond do specific lines
+  // references a swtch case for parsing the MTA feeds that correspond with
+  // specific lines.
   var feedId = getFeed.getFeedId(line);
 
   if (req.user) {
@@ -217,13 +190,28 @@ app.get('/lines/:line', (req, res) => {
 
   getStops(feedId, line, res);
 
-
 });
 
+
+// Reads JSON file with the lists of stopIds and station names.
+// On completion renders the line page
+var getStops = function(feedId, line, res) {
+
+  fs.readFile(`StaticData/FullSimple.json`, 'utf-8', function(err, result) {
+    let stops = JSON.parse(result);
+
+    return res.render('line', {
+      line: line,
+      stops: stops[`line${line}`],
+      feedId: feedId,
+      tempLogin: tempLogin
+    });
+  });
+
+}
+
+
 app.get('/stops/:stop&:feedId&:stationName&:line', (req, res) => {
-  // let lineInt = (parseInt(req.params.line[4]) - 1);
-  // console.log(req.params.feedId);
-  // console.log(req.params.stop);
 
   if (req.user) {
     var username = req.user.username;
@@ -255,12 +243,14 @@ app.get('/stops/:stop&:feedId&:stationName&:line', (req, res) => {
       });
     }
 
-    // Parseing agent for times and Northbound/Southbound differentiation
+    // Parses the MTA data into readable time estimates and collects information
+    // on the train type. Arbitrarily limited to three results right now.
 
     let station = stopFetch.fetch(thisStop, thisFeed, result);
     station.name = stationName;
 
     return res.render('stop', {
+
       errorReport: '',
       station: station,
       stationName: stationName,
@@ -280,15 +270,19 @@ app.get('/stops/:stop&:feedId&:stationName&:line', (req, res) => {
 
 // route for registration page
 app.get('/register', (req, res) => {
+
   tempLogin = '';
+
   res.render('register', {
     tempLogin:tempLogin,
     errMsg: ''
   });
+
 });
 
 app.post('/register', (req, res) => {
 
+  // A few small checks for data consistancy and error parseing
   let username = req.body.username;
   let specialCharacters = /\W|_/g
 
@@ -307,51 +301,68 @@ app.post('/register', (req, res) => {
     favorites: '{ "favorites": [] }'
 
   }).then(x => {
+
     res.redirect(`/confirmation/${req.body.username}&${req.body.password}`);
+
   })
+
 });
 
 app.get('/confirmation/:username&:password', (req, res) => {
+
   res.render('confirmation', {
     username: req.params.username,
     password: req.params.password,
     tempLogin: tempLogin
   });
+
 });
 
-app.post('/confirmation', passport.authenticate('local', {
-  failureRedirect: '/login'
-}), (req, res) => {
+app.post('/confirmation', passport.authenticate('local', { failureRedirect: '/login'}), (req, res) => {
+
+  // Confirmation page functions as an intermediate step between new user
+  // creation and login. I couldn't think of a way to do it on one page, so I
+  // made it two. Unfortunately it is reletively unsafe without password
+  // encryption.
+
   res.redirect('/');
+
 });
 
 app.get('/login', (req, res) => {
+
   let tempLogin = ''
   let errMsg = ''
+
+  // Package for storing cookies quickly?
   var errors = req.flash();
 
   if (errors.error) {
     errMsg = errors.error[0];
   }
 
-
   res.render('login', {
     tempLogin:tempLogin,
     errMsg: errMsg
   });
+
 });
 
 app.post('/login', passport.authenticate('local', {
   failureRedirect: '/login',
   failureFlash: 'Invalid username or password.'
 }), (req, res) => {
+
+  // Credetials are validated in the passport strategy defined earlier in the app.js
   res.redirect('/');
+
 });
 
 app.get('/logout', (req, res) => {
 
   tempLogin = req.user.username;
 
+  // Delete static data jsons on logout or window close.
   if (fs.existsSync(`./public/data/${tempLogin}_favoriteStopTimes.json`)) {
     fs.unlinkSync(`./public/data/${tempLogin}_favoriteStopTimes.json`);
   }
@@ -359,7 +370,13 @@ app.get('/logout', (req, res) => {
   tempLogin = '';
   req.logout();
   res.redirect('/');
+
 });
+
+// Route for adding favorites to user accounts where data is stored in a JSON.
+// pg database serves as permanent storage, temp jsons are made per user to store
+// time data and pass it from persistant server refreshes to ajax calls from the
+// client.
 
 app.post('/favorite', (req, res) => {
 
@@ -374,8 +391,7 @@ app.post('/favorite', (req, res) => {
       }
     }
   }).then(user => {
-    console.log('----------------------------------- favs ------------------------------------');
-    console.log(user.dataValues.favorites);
+    console.log('----------------------------------- Creating new Favorite ------------------------------------');
     var favs = JSON.parse(user.dataValues.favorites);
     if (!Object.keys(favs.favorites).includes(req.body.stopId)) {
       let newFav = {};
@@ -384,8 +400,6 @@ app.post('/favorite', (req, res) => {
       newFav.line = req.body.line;
       newFav.stationName = req.body.stationName;
       favs.favorites.push(newFav);
-      console.log(favs);
-      console.log('^ ---------- favs pre-join --------- ^');
       favs = JSON.stringify(favs);
       console.log(favs);
       console.log('^ ---------- favs post-join --------- ^');
@@ -397,7 +411,7 @@ app.post('/favorite', (req, res) => {
 
         // write static file for client reference
         fs.writeFile(`./public/data/${tempLogin}_favoriteStopTimes.json`, favs, (err) => {
-          console.log('-------------------------------------- new file written ------------------------------------------');
+          console.log('-------------------------------------- New Static file for user '+ tempLogin +' for new favoirte ------------------------------------------');
           if (err) {
             console.log(err);
           }
@@ -407,6 +421,9 @@ app.post('/favorite', (req, res) => {
     }
   });
 });
+
+// Get index of favorite and splice it out of array of favorites, and then modify
+// the user data.
 
 app.post('/remove',(req,res)=>{
   tempLogin = req.body.username;
@@ -425,21 +442,22 @@ app.post('/remove',(req,res)=>{
     var newFavorites = oldFavorites
 
     user.updateAttributes({
+
       favorites: JSON.stringify(newFavorites)
+
     }).then(()=>{
+
       return res.redirect('/');
+
     })
   })
 
 });
 
 app.get('/get-stops',(req,res)=>{
+
   // Full stop data for favorite selector
-  let stops = fs.readFileSync(`StaticData/FullSimple.json`, 'utf-8', function(err, result) {
-    return result
-    // console.log(`readFile complete`);
-    // console.log(stops[`line${line}`]);
-  });
+  let stops = fs.readFileSync(`StaticData/FullSimple.json`, 'utf-8', function(err, result) { return result });
 
   res.send(stops);
 
@@ -453,10 +471,6 @@ app.post('/favorite-select',(req,res)=>{
   let stopId = stopInfo[0];
   let stopName = stopInfo[1].split('%20').join(' ');
   let username = req.user.username;
-  console.log(username);
-  console.log(line);
-  console.log(stopId);
-  console.log(stopName);
   let feedId = getFeed.getFeedId(line).toString();
 
   let newFav = {
@@ -485,14 +499,17 @@ app.post('/favorite-select',(req,res)=>{
   })
 })
 
-
+// A post that should kill the interval that continuously pulls data for the
+// homepage/favorites section
 app.post('/stopData', (req, res) => {
-  console.log('stop data called');
+
+  console.log('Clear Interval post called');
   clearInterval(dataPull);
-})
+
+});
 
 // NOTE: Always check the PORT
 app.listen(8080, function(err) {
   if (err) throw err;
-  console.log('server');
+  console.log('Subway++ is here!');
 });

@@ -32,6 +32,12 @@ $(document).ready(function(){
 
   });
 
+  $('.remove-button-mobile').click(function(){
+
+    $(this).parent().siblings(".remove-favorite").submit();
+
+  })
+
 
   function getLastRefresh(favIndex) {
 

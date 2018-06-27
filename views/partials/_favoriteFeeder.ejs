@@ -4,9 +4,25 @@
     <% for (let fav of favs) { %>
 
     <div class="fav-single line-type-<%= fav.line %>" data-stopId=<%= fav.stopId %>>
+      <div class="mobile-buttons-container line-type-<%= fav.line %>">
+        <button type="button" class="remove-button remove-button-mobile">Remove</button>
+        <button type="button" class="remove-button refresh" data-index=<%= count %> >Refresh</button>
+      </div>
       <span class="fav-line-name line-type-<%= fav.line %>"><%= fav.line %></span>
+      <svg class="fav-menu" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 557 557" style="enable-background:new 0 0 557 557;" xml:space="preserve">
+        <g>
+          <g>
+            <path d="M536.8,23.5H20.1C9,23.5,0,32.5,0,43.6V151c0,11.1,9,20.1,20.1,20.1h516.7c11.1,0,20.1-9,20.1-20.1V43.6
+              C557,32.5,548,23.5,536.8,23.5z"/>
+            <path d="M536.8,204.7H20.1C9,204.7,0,213.7,0,224.8v107.4c0,11.1,9,20.1,20.1,20.1h516.7c11.1,0,20.1-9,20.1-20.1V224.8
+              C557,213.7,548,204.7,536.8,204.7z"/>
+            <path d="M536.8,385.9H20.1C9,385.9,0,394.9,0,406v107.4c0,11.1,9,20.1,20.1,20.1h516.7c11.1,0,20.1-9,20.1-20.1V406
+              C557,394.9,548,385.9,536.8,385.9z"/>
+          </g>
+        </g>
+        </svg>
 
-    <h2 class="station-name"><%= fav.stationName %></br><span class="fav-refresh"></lastRefresh></h2>
+      <h2 class="station-name"><%= fav.stationName %></br><span class="fav-refresh"></span></h2>
 
       <form class="remove-favorite" action="/remove" method="post">
         <input style="display:none;" type="text" name="username" value="<%= tempLogin %>">

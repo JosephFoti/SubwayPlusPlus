@@ -27,5 +27,24 @@ $('document').ready(function(){
 
   })
 
+  // Mobile Favorites Menus
+
+  $('.fav-menu').click(function(){
+
+    let color = $(this).siblings('.fav-line-name').css('border-color');
+
+    $(this).siblings('.mobile-buttons-container').css('background-color',color);
+
+    if ($('.fav-menu').hasClass('open')) {
+      $('.fav-menu').removeClass('open');
+      TweenMax.to($(this).siblings('.mobile-buttons-container'),.5,{height:"0px",ease:Power2.easeOut,delay:.25})
+    } else {
+      $('.fav-menu').addClass('open');
+      TweenMax.to($(this).siblings('.mobile-buttons-container'),.5,{height:"50px",ease:Power2.easeOut,delay:.25})
+    }
+
+  })
+
+
 
 })
