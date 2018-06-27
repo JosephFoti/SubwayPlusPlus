@@ -343,6 +343,58 @@ form.remove-favorite {
     float: right;
 }
 
+/*  Stop Selector  */
+
+form.favorite-selector {
+    padding: 15px;
+    margin: 15px;
+    box-shadow: 0px 0px 7px -2px #6e6e6e;
+    border-radius: 4px;
+}
+
+select {
+
+    -webkit-appearance: none;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-radius: 2px;
+    padding: 7px;
+    background: white;
+
+}
+
+.favorite-selector > button {
+    border-radius: 0px !important;
+    padding: 5px 10px;
+    background-color: white;
+    box-shadow: none;
+    border-color: #a6a6a6;
+    font-size: 15px;
+    text-transform: uppercase;
+    font-family: 'Roboto Condensed', sans-serif;
+    cursor: pointer;
+    float: right;
+    letter-spacing: 0px;
+    width: fit-content;
+    line-height: 17px;
+    border-radius: 2px;
+}
+
+
+select.line-selector {
+    width: 25%;
+    border-radius: 2px;
+}
+
+select.stops {
+    width: 50%;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-radius: 2px;
+}
+
+
+
 /*  colors  */
 
 .line-type-1, .line-type-2, .line-type-3 {

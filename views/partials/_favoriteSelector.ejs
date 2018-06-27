@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<div class="favorite-selector-wrap">
+  <form class="favorite-selector" action="/favorite-select" method="post">
+    <select class="line-selector" name="line">
+      <option value="not-selected">Line</option>
+      <% for (line of lineNames) { %>
+
+        <option value="<%= line %>"><%= line %></option>
+
+      <% } %>
+    </select>
+  <select class="stops" name="stops">
+    <option value="not-selected">Select a line to begin</option>
+  </select>
+  <button type="submit" name="button">Add Favorite</button>
+  </form>
+</div>

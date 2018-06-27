@@ -401,6 +401,58 @@ app.post('/remove',(req,res)=>{
     })
   })
 
+});
+
+app.get('/get-stops',(req,res)=>{
+  // Full stop data for favorite selector
+  let stops = fs.readFileSync(`StaticData/FullSimple.json`, 'utf-8', function(err, result) {
+    return result
+    // console.log(`readFile complete`);
+    // console.log(stops[`line${line}`]);
+  });
+
+  res.send(stops);
+
+});
+
+app.post('/favorite-select',(req,res)=>{
+
+  let line = req.body.line;
+  let stopInfo = req.body.stops;
+  stopInfo = stopInfo.split(',');
+  let stopId = stopInfo[0];
+  let stopName = stopInfo[1].split('%20').join(' ');
+  let username = req.user.username;
+  console.log(username);
+  console.log(line);
+  console.log(stopId);
+  console.log(stopName);
+  let feedId = getFeed.getFeedId(line).toString();
+
+  let newFav = {
+    stopId: stopId,
+    feedId: feedId,
+    line: line,
+    stationName: stopName
+  }
+
+  User.findOne({
+    where: {
+      username: {
+        $iLike: username
+      }
+    }
+  }).then(user=>{
+    let oldFavorites = user.dataValues.favorites;
+    newFavorites = JSON.parse(oldFavorites);
+    newFavorites.favorites.push(newFav);
+    user.updateAttributes({
+      favorites: JSON.stringify(newFavorites)
+    }).then(()=>{
+      res.redirect('/');
+    })
+
+  })
 })
 
 

@@ -33,6 +33,7 @@ $(document).ready(function(){
     $.ajax({
       url:`../data/${tempLogin}_favoriteStopTimes.json`,
       success: function(result){
+        console.log(result);
         var result = result['favorites'];
         timeCall(result)
       },
