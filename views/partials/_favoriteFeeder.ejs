@@ -12,9 +12,9 @@
         <input style="display:none;" type="text" name="username" value="<%= tempLogin %>">
         <input style="display:none;" type="number" name="favIndex" value="<%= count %>">
         <button class="remove-button" type="submit">Remove</button>
+        <button class="remove-button refresh" data-index=<%= count %> style="margin-right:10px">Refresh</button>
       </form>
-
-    <div class="times-wrapper"></div>
+      <div class="times-wrapper"></div>
     </div>
 
       <% count++ %>

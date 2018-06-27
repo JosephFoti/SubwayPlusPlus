@@ -6,6 +6,33 @@ $(document).ready(function(){
   console.log(singles);
   console.log(tempLogin);
 
+
+  $('.refresh').click(function(event) {
+
+    event.preventDefault();
+
+    let count = $(event.target).data('index');
+    $.ajax({
+
+      url:`../data/${tempLogin}_favoriteStopTimes.json`,
+      success: function(result){
+        // console.log(result);
+        // var singleResult = {};
+        var singleResult = result['favorites'][count];
+        singleResult.tempIndex = count;
+
+        timeCall([singleResult]);
+      },
+      failure: function(err) {
+        console.log('something went wrong!');
+        console.log(err);
+      }
+    });
+
+
+  });
+
+
   function getLastRefresh(favIndex) {
 
     let date = new Date();
@@ -21,11 +48,9 @@ $(document).ready(function(){
     minutes = minutes < 10 ? '0'+minutes : minutes;
     var strTime = hours + ':' + minutes + ':' + seconds +' ' + ampm;
 
-    if (favIndex > 0) {
-      $('.fav-refresh').eq([favIndex]).text('Last refresh was at '+strTime);
-    } else {
-      $('.fav-refresh').text('Last refresh | '+strTime);
-    }
+
+    $('.fav-refresh').eq([favIndex]).text('Last refresh was at '+strTime);
+
 
   }
 
@@ -46,7 +71,7 @@ $(document).ready(function(){
 
 var timeCall = function(result){
     console.log('Initial Call, on try '+tries);
-
+    console.log(result);
     let html = '';
     for (let i=0;i < result.length;i++) {
       // console.log('checking result '+i)
@@ -109,6 +134,14 @@ var timeCall = function(result){
       // $(singles).eq(i).innerHTML(html);
     console.log(i + ' got data');
     // result.splice(i,1);
+
+    if (result.length === 1 && result[i]['tempIndex']) {
+      singles[result[i]['tempIndex']].innerHTML = html;
+      html = '';
+      getLastRefresh(result[i]['tempIndex']);
+      return;
+    }
+
     singles[i].innerHTML = html;
     html = '';
     getLastRefresh(i);
@@ -171,6 +204,7 @@ var timeCall = function(result){
           }
             html += `</ul>`
           // $(singles).eq(i).innerHTML(html);
+        if (!singles[i]) continue;
 
         singles[i].innerHTML = html;
         html = '';

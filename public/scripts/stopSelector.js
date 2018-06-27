@@ -16,9 +16,17 @@ $('document').ready(function(){
     }
   });
 
+
+
   // set onchange for line selector
-  $('.line-selector').change(x=>{
-    let lineName = x.target.value;
+  $('.line-selector').change(e=>{
+
+    if ($('.line-selector').hasClass('alert')) {
+      $('.line-selector').removeClass('alert');
+    }
+
+    let lineName = e.target.value;
+
     // console.log(stopData);
     if (stopData) {
       console.log('stops checked');
@@ -32,5 +40,31 @@ $('document').ready(function(){
     }
   })
 
+  $('.stops').change(function(event) {
+    if ($('.stops').hasClass('alert')) {
+      $('.stops').removeClass('alert');
+    }
+  });
+
+});
+
+$('.favorite-selector').children('button').click(e=>{
+
+  e.preventDefault();
+
+  let lineName = $('.line-selector').val();
+  let stopName = $('.stops').val();
+
+  if (lineName === null && lineName === null) {
+    $('.line-selector').addClass('alert');
+    $('.stops').addClass('alert');
+    return
+  }
+  if (lineName === null) return $('.line-selector').addClass('alert');
+  if (stopName === null) return $('.stops').addClass('alert');
+  console.log(lineName);
+  console.log(stopName);
+  $('.favorite-selector').submit();
+  return true;
 
 })

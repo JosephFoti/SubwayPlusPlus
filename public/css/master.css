@@ -407,7 +407,10 @@ select {
     cursor: pointer;
 }
 
-
+.alert {
+    border-color: #f97979;
+    border-width: 2px;
+}
 
 /*  colors  */
 
