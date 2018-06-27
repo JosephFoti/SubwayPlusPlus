@@ -17,9 +17,14 @@
       <h1>Register</h1>
       <h4>Sign up to save your favorite stops for quick reference</h4>
 
+      <% if (errMsg.length>0) { %>
+        <h3 class="error-message"><%= errMsg %></h3>
+      <% } %>
+
       <form class="main-form" action="/register" method="post">
         <label>Username</label><br/><input type="text" name="username" value="" />
         <label>Password</label><br/><input type="password" name="password" value="" />
+        <label>Confirm Password</label><br/><input type="password" name="password2" value="" />
         <label>Email</label><br/><input type="text" name="email" value="" />
         <button type="submit" name="button">register</button>
       </form>

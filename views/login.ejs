@@ -15,6 +15,10 @@
 
     <div class="login-wrapper">
 
+      <% if (errMsg.length > 0) { %>
+        <h3 class="error-message"><%= errMsg %></h3>
+      <% } %>
+
       <h1 class="title">Login</h1>
       <h4>Get back to your custom subway feed</h4>
 

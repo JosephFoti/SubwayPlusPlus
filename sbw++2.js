@@ -10,6 +10,7 @@ const {
 } = require('pg')
 const Strategy = require('passport-local').Strategy;
 const cookieParser = require('cookie-parser');
+const flash = require('connect-flash');
 
 const app = express();
 
@@ -25,6 +26,10 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(express.static('public'));
 
+// flash, middleware for making cookies with error messages
+// app.use(express.session({cookie: {maxAge:60000}}));
+app.use(flash());
+// app.use(express.cookieParser('keyboard cat'));
 
 
 const Op = Sequelize.Op
@@ -275,12 +280,26 @@ app.get('/stops/:stop&:feedId&:stationName&:line', (req, res) => {
 
 // route for registration page
 app.get('/register', (req, res) => {
+  tempLogin = '';
   res.render('register', {
-    tempLogin
+    tempLogin:tempLogin,
+    errMsg: ''
   });
 });
 
 app.post('/register', (req, res) => {
+
+  let username = req.body.username;
+  let specialCharacters = /\W|_/g
+
+  if (specialCharacters.test(username)) {
+    return res.render('register',{errMsg:'Special characters and spaces are not allowed in the username.'});
+  }
+
+  if (req.body.password !== req.body.password2) {
+    return res.render('register',{errMsg:'Password confirmation did not match original'});
+  }
+
   User.create({
     username: req.body.username,
     password: req.body.password,
@@ -307,13 +326,24 @@ app.post('/confirmation', passport.authenticate('local', {
 });
 
 app.get('/login', (req, res) => {
+  let tempLogin = ''
+  let errMsg = ''
+  var errors = req.flash();
+
+  if (errors.error) {
+    errMsg = errors.error[0];
+  }
+
+
   res.render('login', {
-    tempLogin
+    tempLogin:tempLogin,
+    errMsg: errMsg
   });
 });
 
 app.post('/login', passport.authenticate('local', {
-  failureRedirect: '/login'
+  failureRedirect: '/login',
+  failureFlash: 'Invalid username or password.'
 }), (req, res) => {
   res.redirect('/');
 });
