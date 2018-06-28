@@ -512,7 +512,7 @@ app.post('/stopData', (req, res) => {
 });
 
 // NOTE: Always check the PORT
-app.listen(8080, function(err) {
+app.listen(PORT, function(err) {
   if (err) throw err;
   console.log('Subway++ is here!');
 });
