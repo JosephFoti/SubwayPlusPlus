@@ -15,7 +15,9 @@ const app = express();
 const stopFetch = require('./components/stopFetch.js');
 const getFeed = require('./components/getFeed.js');
 const getFavs = require('./components/getFavTimes.js');
+const getService = require('./components/getService.js');
 
+getService.connectionTest();
 
 app.set('view engine', 'ejs');
 app.use(bodyParser.json());
@@ -160,6 +162,8 @@ app.get('/', (req, res) => {
     // fetches the time information for user's selected favorites
     // and pushes them to a public data file for that user
     getFavs.getFavs(req);
+
+    getService.status(favs,tempLogin);
 
     return res.render('home', {
       favs: favs,
