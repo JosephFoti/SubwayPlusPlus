@@ -447,7 +447,13 @@ app.post('/remove',(req,res)=>{
 
     }).then(()=>{
 
-      return res.redirect('/');
+      fs.writeFile(`./public/data/${tempLogin}_favoriteStopTimes.json`, JSON.stringify(newFavorites), (err) => {
+        console.log('-------------------------------------- New Static file for user '+ tempLogin +' without erased favoirte ------------------------------------------');
+        if (err) {
+          console.log(err);
+        }
+        return res.redirect('/');
+      });
 
     })
   })

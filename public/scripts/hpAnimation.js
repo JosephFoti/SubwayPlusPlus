@@ -35,12 +35,14 @@ $('document').ready(function(){
 
     $(this).siblings('.mobile-buttons-container').css('background-color',color);
 
-    if ($('.fav-menu').hasClass('open')) {
-      $('.fav-menu').removeClass('open');
+    if ($(this).hasClass('open')) {
+      $(this).removeClass('open');
       TweenMax.to($(this).siblings('.mobile-buttons-container'),.5,{height:"0px",ease:Power2.easeOut,delay:.25})
+      TweenMax.to($(this),.25,{rotation:0,ease:Back.easeOut.config(1.2)});
     } else {
-      $('.fav-menu').addClass('open');
+      $(this).addClass('open');
       TweenMax.to($(this).siblings('.mobile-buttons-container'),.5,{height:"50px",ease:Power2.easeOut,delay:.25})
+      TweenMax.to($(this),.5,{rotation:90,ease:Back.easeOut.config(1.2)});
     }
 
   })

@@ -12,6 +12,10 @@ $(document).ready(function(){
     event.preventDefault();
 
     let count = $(event.target).data('index');
+
+    $('.is-loading').eq(count).addClass('active');
+    TweenMax.to($('.is-loading').eq(count),.2,{alpha:1});
+
     $.ajax({
 
       url:`../data/${tempLogin}_favoriteStopTimes.json`,
@@ -57,8 +61,15 @@ $(document).ready(function(){
 
     $('.fav-refresh').eq([favIndex]).text('Last refresh was at '+strTime);
 
+    // check if their is a loading icon, if so remove it.
+    if ($('.is-loading').eq(favIndex).hasClass('active')) {
+        $('.is-loading').eq(favIndex).remove('active');
+        TweenMax.to($('.is-loading').eq(favIndex),.2,{alpha:0});
+    }
 
   }
+
+
 
   if ($('.tempLogin').text() && !$('.hp-banner').hasClass('no-favorites')) {
     $.ajax({
