@@ -498,12 +498,12 @@ app.post('/favorite-select',(req,res)=>{
     }).then(()=>{
       res.redirect('/');
     })
-
   })
 })
 
 // A post that should kill the interval that continuously pulls data for the
 // homepage/favorites section
+// something
 app.post('/stopData', (req, res) => {
 
   console.log('Clear Interval post called');
@@ -515,4 +515,6 @@ app.post('/stopData', (req, res) => {
 app.listen(PORT, function(err) {
   if (err) throw err;
   console.log('Subway++ is here!');
+  console.log('again')
+
 });
