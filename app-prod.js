@@ -23,6 +23,7 @@ const dotenv = require('dotenv');
 const result = dotenv.config();
 
 const flash = require('connect-flash');
+app.use(flash());
 
 app.set('view engine', 'ejs');
 app.use(bodyParser.json());
