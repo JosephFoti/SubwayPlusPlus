@@ -97,7 +97,7 @@ var status = function(tempLogin = false, single = false) {
 }
 
 var statusSingle = async function(singleValue) {
-
+  console.log('single fires');
   let singleResult;
   let badLines = [];
 
