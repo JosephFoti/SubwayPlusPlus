@@ -18,6 +18,7 @@ const app = express();
 const stopFetch = require('./components/stopFetch.js');
 const getFeed = require('./components/getFeed.js');
 const getFavs = require('./components/getFavTimes.js');
+const getService = require('./components/getService.js');
 
 const dotenv = require('dotenv');
 const result = dotenv.config();
