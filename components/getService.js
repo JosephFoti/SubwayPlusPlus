@@ -105,7 +105,7 @@ var statusSingle = function(singleValue) {
   mta.status('subway').then(function(status){
     console.log('resolve');
     console.log(JSON.stringify(status));
-  }).catch(err=>throw err);
+  }).catch(err=>console.log(err));
 
 
 
