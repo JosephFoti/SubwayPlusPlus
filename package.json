@@ -15,5 +15,9 @@
     "passport-local": "^1.0.0",
     "pg": "^7.4.3",
     "sequelize": "^4.37.10"
+  },
+  "engines": {
+    "node": "8.11.1"
   }
+
 }
