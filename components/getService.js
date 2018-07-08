@@ -101,6 +101,13 @@ var statusSingle = function(singleValue) {
   let singleResult;
   let badLines = [];
 
+
+  mta.status('subway').then(function(status){
+    console.log(status);
+  }
+
+
+
   // mta.status('subway').then(function(status){
   //   // console.log(status);
   //   console.log('status check');
