@@ -45,6 +45,26 @@ $('document').ready(function(){
       TweenMax.to($(this),.5,{rotation:90,ease:Back.easeOut.config(1.2)});
     }
 
+  });
+
+  // Status Tab
+
+  $('.status-tab').click(function(){
+
+    let target = $(this).siblings('.status-wrapper');
+
+    if ( $(target).hasClass('active') ) {
+
+      $(target).removeClass('active');
+      TweenMax.to($(target),.5,{height:"0px",paddingTop:"0px",paddingBottom:"0px",borderWidth:"0px"});
+
+    } else {
+
+      $(target).addClass('active');
+      TweenMax.to($(target),.5,{height:"150px",paddingTop:"7px",paddingBottom:"7px",borderWidth:"1px"});
+
+    }
+
   })
 
 

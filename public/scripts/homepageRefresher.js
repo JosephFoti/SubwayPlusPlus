@@ -110,7 +110,7 @@ $(document).ready(function() {
             return;
           }
 
-          html += '<h5 class="error-msg">Uh-oh! No data for this stop.</h5>'
+          html += '<h5 class="error-msg">Uh-oh! No times reported by the MTA. Check the status tab for more information</h5>'
           singles[i].classList.add("empty")
           singles[i].innerHTML = html;
           html = ''
@@ -257,11 +257,14 @@ $(document).ready(function() {
         // let effectedLines = Object.keys(result);
         for (fav of favorites) {
           if (result[$(fav).children('.fav-line-name').text()]) {
-            $(fav).children('.status-tab').text(result[$(fav).children('.fav-line-name').text()].status);
+            $(fav).children('.status-tab').text('SERVICE STATUS: ' + result[$(fav).children('.fav-line-name').text()].status);
             $(fav).children('.status-wrapper').html(result[$(fav).children('.fav-line-name').text()].text);
           }
         }
       }
+
+      $('.status-wrapper').children('br').remove();
+
     },
     failure: function(failure) {
       console.log('fail');
