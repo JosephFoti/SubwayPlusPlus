@@ -101,85 +101,85 @@ var statusSingle = function(singleValue) {
   let singleResult;
   let badLines = [];
 
-  mta.status('subway').then(function(status){
-    // console.log(status);
-    console.log('status check');
-
-    // push all lines that have a status that is not good service to array
-    // for (statusItem of status) {
-    //   if (statusItem.status !== 'GOOD SERVICE') {
-    //     badLines.push(statusItem)
-    //   }
-    // }
-    //
-    // // Fire if their are lines with service updates
-    // if (badLines.length>0) {
-    //   console.log('bad lines exist');
-    //   // Service updates come in line bundles, we need to parse out the individual
-    //   // lines to be checked one by one
-    //   var effectedGroups = badLines.map(x=>{
-    //     return x.name
-    //   });
-    //
-    //   effectedLines = effectedGroups.join('').split('');
-    //
-    //   let parsedStatusUpdates = {};
-    //
-    //   var errorsForLines = effectedLines.map((x,i)=>{
-    //
-    //     for (var j = 0; j < effectedGroups.length; j++) {
-    //       let splitGroup = effectedGroups[j].split('');
-    //       if (splitGroup.includes(x)) {
-    //         // ES6 adds object into an object as a dictionary not an array of obejcts
-    //         Object.assign(parsedStatusUpdates, { [`${x}`]:badLines[j]})
-    //       }
-    //     }
-    //     return x;
-    //
-    //   });
-
-    //   console.log('lines with errors');
-    //   console.log(errorsForLines);
-    //
-    //   if (errorsForLines.includes(singleValue)) {
-    //     console.log(`found status update for singleValue ${singleValue}`);
-    //     console.log(parsedStatusUpdates[singleValue]);
-    //     singleResult = parsedStatusUpdates[singleValue];
-    //   } else {
-    //     singleResult = false;
-    //   }
-    //
-    //
-    //
-    // } else {
-    //    singleResult = false;
-    // }
-    //
-    // console.log('single result');
-    // console.log(singleResult);
-
-    // if (singleResult) {
-    //   fs.writeFile(`./public/data/${singleValue}_statusReport.json`, JSON.stringify(singleResult), err=>{
-    //     if (err) {
-    //       console.log(err);
-    //     }
-    //     console.log(`|--|--|--|--|--|--|--|--|--| Single Status File Written for ${singleValue} |--|--|--|--|--|--|--|--|--|`);
-    //
-    //   })
-    //
-    // } else {
-    //
-    //   fs.writeFile(`./public/data/${singleValue}_statusReport.json`, JSON.stringify({status: "GOOD SERVICE"}), err=>{
-    //     if (err) {
-    //       console.log(err);
-    //     }
-    //     console.log(`|--|--|--|--|--|--|--|--|--| EMPTY Single Status File Written for ${singleValue} |--|--|--|--|--|--|--|--|--|`);
-    //
-    //   });
-    //
-    // }
-
-  }).catch(err=>console.log(err));
+  // mta.status('subway').then(function(status){
+  //   // console.log(status);
+  //   console.log('status check');
+  //
+  //   // push all lines that have a status that is not good service to array
+  //   // for (statusItem of status) {
+  //   //   if (statusItem.status !== 'GOOD SERVICE') {
+  //   //     badLines.push(statusItem)
+  //   //   }
+  //   // }
+  //   //
+  //   // // Fire if their are lines with service updates
+  //   // if (badLines.length>0) {
+  //   //   console.log('bad lines exist');
+  //   //   // Service updates come in line bundles, we need to parse out the individual
+  //   //   // lines to be checked one by one
+  //   //   var effectedGroups = badLines.map(x=>{
+  //   //     return x.name
+  //   //   });
+  //   //
+  //   //   effectedLines = effectedGroups.join('').split('');
+  //   //
+  //   //   let parsedStatusUpdates = {};
+  //   //
+  //   //   var errorsForLines = effectedLines.map((x,i)=>{
+  //   //
+  //   //     for (var j = 0; j < effectedGroups.length; j++) {
+  //   //       let splitGroup = effectedGroups[j].split('');
+  //   //       if (splitGroup.includes(x)) {
+  //   //         // ES6 adds object into an object as a dictionary not an array of obejcts
+  //   //         Object.assign(parsedStatusUpdates, { [`${x}`]:badLines[j]})
+  //   //       }
+  //   //     }
+  //   //     return x;
+  //   //
+  //   //   });
+  //
+  //   //   console.log('lines with errors');
+  //   //   console.log(errorsForLines);
+  //   //
+  //   //   if (errorsForLines.includes(singleValue)) {
+  //   //     console.log(`found status update for singleValue ${singleValue}`);
+  //   //     console.log(parsedStatusUpdates[singleValue]);
+  //   //     singleResult = parsedStatusUpdates[singleValue];
+  //   //   } else {
+  //   //     singleResult = false;
+  //   //   }
+  //   //
+  //   //
+  //   //
+  //   // } else {
+  //   //    singleResult = false;
+  //   // }
+  //   //
+  //   // console.log('single result');
+  //   // console.log(singleResult);
+  //
+  //   // if (singleResult) {
+  //   //   fs.writeFile(`./public/data/${singleValue}_statusReport.json`, JSON.stringify(singleResult), err=>{
+  //   //     if (err) {
+  //   //       console.log(err);
+  //   //     }
+  //   //     console.log(`|--|--|--|--|--|--|--|--|--| Single Status File Written for ${singleValue} |--|--|--|--|--|--|--|--|--|`);
+  //   //
+  //   //   })
+  //   //
+  //   // } else {
+  //   //
+  //   //   fs.writeFile(`./public/data/${singleValue}_statusReport.json`, JSON.stringify({status: "GOOD SERVICE"}), err=>{
+  //   //     if (err) {
+  //   //       console.log(err);
+  //   //     }
+  //   //     console.log(`|--|--|--|--|--|--|--|--|--| EMPTY Single Status File Written for ${singleValue} |--|--|--|--|--|--|--|--|--|`);
+  //   //
+  //   //   });
+  //   //
+  //   // }
+  //
+  // }).catch(err => throw err);
 
 
 
