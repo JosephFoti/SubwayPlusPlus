@@ -153,7 +153,7 @@ var statusSingle = async function(singleValue) {
       return singleResult = false;
     }
 
-  });
+  }).catch(err=>{throw err});
 
   if (singleResult) {
     fs.writeFile(`./public/data/${singleValue}_statusReport.json`, JSON.stringify(singleResult), err=>{
