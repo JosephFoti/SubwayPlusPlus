@@ -158,26 +158,26 @@ var statusSingle = function(singleValue) {
     console.log('single result');
     console.log(singleResult);
 
-    if (singleResult) {
-      fs.writeFile(`./public/data/${singleValue}_statusReport.json`, JSON.stringify(singleResult), err=>{
-        if (err) {
-          console.log(err);
-        }
-        console.log(`|--|--|--|--|--|--|--|--|--| Single Status File Written for ${singleValue} |--|--|--|--|--|--|--|--|--|`);
-
-      })
-
-    } else {
-
-      fs.writeFile(`./public/data/${singleValue}_statusReport.json`, JSON.stringify({status: "GOOD SERVICE"}), err=>{
-        if (err) {
-          console.log(err);
-        }
-        console.log(`|--|--|--|--|--|--|--|--|--| EMPTY Single Status File Written for ${singleValue} |--|--|--|--|--|--|--|--|--|`);
-
-      });
-
-    }
+    // if (singleResult) {
+    //   fs.writeFile(`./public/data/${singleValue}_statusReport.json`, JSON.stringify(singleResult), err=>{
+    //     if (err) {
+    //       console.log(err);
+    //     }
+    //     console.log(`|--|--|--|--|--|--|--|--|--| Single Status File Written for ${singleValue} |--|--|--|--|--|--|--|--|--|`);
+    //
+    //   })
+    //
+    // } else {
+    //
+    //   fs.writeFile(`./public/data/${singleValue}_statusReport.json`, JSON.stringify({status: "GOOD SERVICE"}), err=>{
+    //     if (err) {
+    //       console.log(err);
+    //     }
+    //     console.log(`|--|--|--|--|--|--|--|--|--| EMPTY Single Status File Written for ${singleValue} |--|--|--|--|--|--|--|--|--|`);
+    //
+    //   });
+    //
+    // }
 
   }).catch(err=>console.log(err));
 
