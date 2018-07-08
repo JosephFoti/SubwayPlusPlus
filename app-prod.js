@@ -317,7 +317,8 @@ app.get('/stops/:stop&:feedId&:stationName&:line', (req, res) => {
 
     // }
 
-  }).catch(err=>console.log(err));
+  });
+  //.catch(err=>console.log(err));
 
   mta.schedule(thisStop, thisFeed).then(function(result) {
 
