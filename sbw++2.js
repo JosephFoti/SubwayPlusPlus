@@ -231,11 +231,10 @@ app.get('/stops/:stop&:feedId&:stationName&:line', (req, res) => {
   // Get the stop and line from req params and use them to plug in the correct datapoint in the stops.json
   // data file. Use the data-tester to make a dictionary, use dictionary as href and call the stop.
 
-  getService.statusSingle(thisLine)
-
-
 
   mta.schedule(thisStop, thisFeed).then(function(result) {
+
+    getService.statusSingle(thisLine);
 
     if (Object.keys(result).length === 0) {
       console.log('no time data recieved from the MTA');

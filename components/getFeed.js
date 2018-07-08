@@ -3,6 +3,7 @@ var getFeedId = function(feedId) {
     case 'A':
     case 'C':
     case 'E':
+    case 'S':
       return 26;
     case '1':
     case '2':
