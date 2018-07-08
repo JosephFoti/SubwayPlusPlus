@@ -221,6 +221,12 @@ h3.stop-status-type {
     color: white;
 }
 
+img.status-loader {
+    width: 21px;
+    position: relative;
+    top: 4px;
+}
+
 /*  Login / Register  */
 
 .login-wrapper {

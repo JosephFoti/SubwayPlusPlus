@@ -274,7 +274,7 @@ app.get('/stops/:stop&:feedId&:stationName&:line', (req, res) => {
       tempLogin: username
 
     });
-  }).catch(x => console.log(x));
+  })
 
 
 

@@ -96,13 +96,14 @@ var status = function(tempLogin = false, single = false) {
 
 }
 
-var statusSingle = async function(singleValue) {
+var statusSingle = function(singleValue) {
   console.log('single fires');
   let singleResult;
   let badLines = [];
 
-  singleResult = await mta.status('subway').then(function(status){
-    console.log(status);
+  mta.status('subway').then(function(status){
+    // console.log(status);
+    console.log('status check');
 
     // push all lines that have a status that is not good service to array
     for (statusItem of status) {
@@ -113,7 +114,7 @@ var statusSingle = async function(singleValue) {
 
     // Fire if their are lines with service updates
     if (badLines.length>0) {
-
+      console.log('bad lines exist');
       // Service updates come in line bundles, we need to parse out the individual
       // lines to be checked one by one
       var effectedGroups = badLines.map(x=>{
@@ -137,34 +138,50 @@ var statusSingle = async function(singleValue) {
 
       });
 
-      // console.log(errorsForLines);
+      console.log('lines with errors');
+      console.log(errorsForLines);
 
       if (errorsForLines.includes(singleValue)) {
         console.log(`found status update for singleValue ${singleValue}`);
         console.log(parsedStatusUpdates[singleValue]);
-        return singleResult = parsedStatusUpdates[singleValue];
+        singleResult = parsedStatusUpdates[singleValue];
       } else {
-        return singleResult = false;
+        singleResult = false;
       }
 
 
 
     } else {
-      return singleResult = false;
+       singleResult = false;
     }
 
-  }).catch(err=>{throw err});
+    console.log('single result');
+    console.log(singleResult);
 
-  if (singleResult) {
-    fs.writeFile(`./public/data/${singleValue}_statusReport.json`, JSON.stringify(singleResult), err=>{
-      if (err) {
-        console.log(err);
-      }
-      console.log(`|--|--|--|--|--|--|--|--|--| Single Status File Written for ${singleValue} |--|--|--|--|--|--|--|--|--|`);
+    if (singleResult) {
+      fs.writeFile(`./public/data/${singleValue}_statusReport.json`, JSON.stringify(singleResult), err=>{
+        if (err) {
+          console.log(err);
+        }
+        console.log(`|--|--|--|--|--|--|--|--|--| Single Status File Written for ${singleValue} |--|--|--|--|--|--|--|--|--|`);
 
-    })
+      })
 
-  }
+    } else {
+
+      fs.writeFile(`./public/data/${singleValue}_statusReport.json`, JSON.stringify({status: "GOOD SERVICE"}), err=>{
+        if (err) {
+          console.log(err);
+        }
+        console.log(`|--|--|--|--|--|--|--|--|--| EMPTY Single Status File Written for ${singleValue} |--|--|--|--|--|--|--|--|--|`);
+
+      });
+
+    }
+
+  }).catch(err=>console.log(err));
+
+
 
 }
 
