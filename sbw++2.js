@@ -238,7 +238,7 @@ app.get('/stops/:stop&:feedId&:stationName&:line', (req, res) => {
   mta.schedule(thisStop, thisFeed).then(function(result) {
 
     if (Object.keys(result).length === 0) {
-      console.log('no data');
+      console.log('no time data recieved from the MTA');
 
       return res.render('stop', {
         errorReport: 'Alas! No times are available from the MTA. Check the service tab for details',

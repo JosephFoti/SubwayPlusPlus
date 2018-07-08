@@ -102,7 +102,7 @@ var statusSingle = async function(singleValue) {
   let badLines = [];
 
   singleResult = await mta.status('subway').then(function(status){
-    // console.log(status);
+    console.log(status);
 
     // push all lines that have a status that is not good service to array
     for (statusItem of status) {

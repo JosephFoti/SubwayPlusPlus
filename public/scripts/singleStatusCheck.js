@@ -13,3 +13,4 @@ $.ajax({
 
   }
 })
+public/data/B_statusReport.json
