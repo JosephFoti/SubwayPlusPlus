@@ -240,12 +240,12 @@ app.get('/stops/:stop&:feedId&:stationName&:line', (req, res) => {
 
   console.log('about to call status');
 
-  let gimme = async function() {
-    let status = await mta.status('subway');
-    console.log(JSON.stringify(status));
-  }
-
-  gimme();
+  // let gimme = async function() {
+  //   let status = await mta.status('subway');
+  //   console.log(JSON.stringify(status));
+  // }
+  //
+  // gimme();
 
   // mta.status('subway').then(function(status){
   //   console.log('resolve');
