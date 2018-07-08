@@ -9,23 +9,27 @@ var connectionTest = function(){
   console.log('helloWord')
 }
 
-var status = function(favorites,tempLogin) {
+var status = function(tempLogin = false, single = false) {
     console.log('|--|--|--|--|--|--|--|--|--| Status Update Fired |--|--|--|--|--|--|--|--|--|');
 
     let badLines = [];
-    mta.status('subway').then(function(status){
-      console.log(status);
+    let singleResult;
 
+    mta.status('subway').then(function(status){
+      // console.log(status);
+
+      // push all lines that have a status that is not good service to array
       for (statusItem of status) {
         if (statusItem.status !== 'GOOD SERVICE') {
           badLines.push(statusItem)
         }
       }
 
-      console.log(badLines.length);
-      
+      // Fire if their are lines with service updates
       if (badLines.length>0) {
 
+      // Service updates come in line bundles, we need to parse out the individual
+      // lines to be checked one by one
       var effectedGroups = badLines.map(x=>{
         return x.name
       });
@@ -46,6 +50,22 @@ var status = function(favorites,tempLogin) {
         return x;
 
       });
+
+      // console.log(errorsForLines);
+
+
+      // if request is for a stop page / single request
+      if (single) {
+
+        if (errorsForLines.includes(single)) {
+          console.log(`found status update for single ${single}`);
+          console.log(parsedStatusUpdates[single]);
+          return singleResult = parsedStatusUpdates[single];
+        } else {
+          return singleResult = false;
+        }
+
+      }
 
       fs.writeFile(`./public/data/${tempLogin}_favoriteStatusUpdates.json`, JSON.stringify(parsedStatusUpdates), err=>{
         if (err) console.log(err);
@@ -70,9 +90,82 @@ var status = function(favorites,tempLogin) {
 
     });
 
-
+    if (singleResult) {
+      return singleResult;
+    }
 
 }
 
+var statusSingle = async function(singleValue) {
 
-module.exports = {connectionTest, status}
+  let singleResult;
+  let badLines = [];
+
+  singleResult = await mta.status('subway').then(function(status){
+    // console.log(status);
+
+    // push all lines that have a status that is not good service to array
+    for (statusItem of status) {
+      if (statusItem.status !== 'GOOD SERVICE') {
+        badLines.push(statusItem)
+      }
+    }
+
+    // Fire if their are lines with service updates
+    if (badLines.length>0) {
+
+      // Service updates come in line bundles, we need to parse out the individual
+      // lines to be checked one by one
+      var effectedGroups = badLines.map(x=>{
+        return x.name
+      });
+
+      effectedLines = effectedGroups.join('').split('');
+
+      let parsedStatusUpdates = {};
+
+      var errorsForLines = effectedLines.map((x,i)=>{
+
+        for (var j = 0; j < effectedGroups.length; j++) {
+          let splitGroup = effectedGroups[j].split('');
+          if (splitGroup.includes(x)) {
+            // ES6 adds object into an object as a dictionary not an array of obejcts
+            Object.assign(parsedStatusUpdates, { [`${x}`]:badLines[j]})
+          }
+        }
+        return x;
+
+      });
+
+      // console.log(errorsForLines);
+
+      if (errorsForLines.includes(singleValue)) {
+        console.log(`found status update for singleValue ${singleValue}`);
+        console.log(parsedStatusUpdates[singleValue]);
+        return singleResult = parsedStatusUpdates[singleValue];
+      } else {
+        return singleResult = false;
+      }
+
+
+
+    } else {
+      return singleResult = false;
+    }
+
+  });
+
+  if (singleResult) {
+    fs.writeFile(`./public/data/${singleValue}_statusReport.json`, JSON.stringify(singleResult), err=>{
+      if (err) {
+        console.log(err);
+      }
+      console.log(`|--|--|--|--|--|--|--|--|--| Single Status File Written for ${singleValue} |--|--|--|--|--|--|--|--|--|`);
+
+    })
+
+  }
+
+}
+
+module.exports = { connectionTest, status, statusSingle }

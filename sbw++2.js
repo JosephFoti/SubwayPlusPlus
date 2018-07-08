@@ -163,7 +163,7 @@ app.get('/', (req, res) => {
     // and pushes them to a public data file for that user
     getFavs.getFavs(req);
 
-    getService.status(favs,tempLogin);
+    getService.status(tempLogin);
 
     return res.render('home', {
       favs: favs,
@@ -231,13 +231,17 @@ app.get('/stops/:stop&:feedId&:stationName&:line', (req, res) => {
   // Get the stop and line from req params and use them to plug in the correct datapoint in the stops.json
   // data file. Use the data-tester to make a dictionary, use dictionary as href and call the stop.
 
+  getService.statusSingle(thisLine)
+
+
+
   mta.schedule(thisStop, thisFeed).then(function(result) {
 
     if (Object.keys(result).length === 0) {
       console.log('no data');
 
       return res.render('stop', {
-        errorReport: 'Alas! No times are available',
+        errorReport: 'Alas! No times are available from the MTA. Check the service tab for details',
         stationName: stationName,
         stop: thisStop,
         feed: thisFeed,

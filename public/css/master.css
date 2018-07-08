@@ -199,6 +199,28 @@ h5.lastRefresh {
 
 }
 
+.stop-status-report-wrapper {
+    padding: 20px;
+    box-sizing: border-box;
+    box-shadow: 0px 0px 10px -2px #0000005e;
+}
+
+h3.stop-status-type {
+    color: white;
+}
+
+.stop-status-text {
+    color: white;
+}
+
+.stop-status-text b {
+    color: white;
+}
+
+.stop-status-text a {
+    color: white;
+}
+
 /*  Login / Register  */
 
 .login-wrapper {
@@ -466,7 +488,7 @@ select {
     font-size: 30px;
     cursor: pointer;
     padding: 0px 10px;
-    line-height: 40px;
+    line-height: 50px;
 }
 
 .status-wrapper {

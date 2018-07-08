@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
   <title>
-    <%= stop %>
+    <%= stationName %>
   </title>
   <link rel="stylesheet" href="/css/master.css">
   <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:300,400,700" rel="stylesheet">
@@ -72,11 +72,20 @@
 
 <% } %>
 
+
+  <div class="stop-status-report-wrapper line-type-<%= line %> background-type-<%= line %>">
+    <h3 class="stop-status-type">SERVICE STATUS: GOOD SERVICE</h3>
+    <div class="stop-status-text"></div>
+  </div>
+
+
 </body>
 <footer>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.1/TweenMax.min.js"></script>
   <script type="text/javascript" src="/scripts/stopAnimation.js"></script>
-  <script type="text/javascript" src="/scripts/autoRefreshTemp.js"></script>
+  <%# <script type="text/javascript" src="/scripts/autoRefreshTemp.js"></script> %>
+  <script type="text/javascript" src="/scripts/singleStatusCheck.js"></script>
+
 </footer>
 </html>
