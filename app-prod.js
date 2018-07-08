@@ -238,9 +238,11 @@ app.get('/stops/:stop&:feedId&:stationName&:line', (req, res) => {
 
   // getService.statusSingle(thisLine)
 
+  console.log('about to call status');
+
   mta.status('subway').then(function(status){
     console.log('resolve');
-    console.log(JSON.stringify(status));
+    //console.log(JSON.stringify(status));
 
     // for (statusItem of status) {
     //   if (statusItem.status !== 'GOOD SERVICE') {
