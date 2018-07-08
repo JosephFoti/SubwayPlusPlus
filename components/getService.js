@@ -104,7 +104,7 @@ var statusSingle = function(singleValue) {
 
   mta.status('subway').then(function(status){
     console.log(status);
-  }
+  })
 
 
 
