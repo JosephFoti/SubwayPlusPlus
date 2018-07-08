@@ -37,22 +37,22 @@ const PORT = process.env.PORT || 3000
 
 
 const Op = Sequelize.Op
-const sequelize = new Sequelize(process.env.DATABASE_URL,  {
-// const sequelize = new Sequelize('barkspace', 'postgres', 'Giraffes94', {
+const sequelize = new Sequelize(process.env.DATABASE_URL, {
+  // const sequelize = new Sequelize('barkspace', 'postgres', 'Giraffes94', {
 
-	logging: true,
-	ssl: true,
-	dialect: 'postgres',
-	protocol: 'postgres',
-	operatorsAliases:{
-		$and: Op.and,
-		$or: Op.or,
-		$eq: Op.eq,
-		$regexp: Op.regexp,
-		$iRegexp: Op.iRegexp,
-		$like: Op.like,
-		$iLike: Op.iLike
-	}
+  logging: true,
+  ssl: true,
+  dialect: 'postgres',
+  protocol: 'postgres',
+  operatorsAliases: {
+    $and: Op.and,
+    $or: Op.or,
+    $eq: Op.eq,
+    $regexp: Op.regexp,
+    $iRegexp: Op.iRegexp,
+    $like: Op.like,
+    $iLike: Op.iLike
+  }
 })
 
 
@@ -240,85 +240,91 @@ app.get('/stops/:stop&:feedId&:stationName&:line', (req, res) => {
 
   console.log('about to call status');
 
-  mta.status('subway').then(function(status){
-    console.log('resolve');
-    //console.log(JSON.stringify(status));
+  let gimme = async function() {
+    let status = await mta.status('subway');
+    console.log(JSON.stringify(status));
+  }
 
-    // for (statusItem of status) {
-    //   if (statusItem.status !== 'GOOD SERVICE') {
-    //     badLines.push(statusItem)
-    //   }
-    // }
-    //
-    // // Fire if their are lines with service updates
-    // if (badLines.length>0) {
-    //   console.log('bad lines exist');
-    //   // Service updates come in line bundles, we need to parse out the individual
-    //   // lines to be checked one by one
-    //   var effectedGroups = badLines.map(x=>{
-    //     return x.name
-    //   });
-    //
-    //   effectedLines = effectedGroups.join('').split('');
-    //
-    //   let parsedStatusUpdates = {};
-    //
-    //   var errorsForLines = effectedLines.map((x,i)=>{
-    //
-    //     for (var j = 0; j < effectedGroups.length; j++) {
-    //       let splitGroup = effectedGroups[j].split('');
-    //       if (splitGroup.includes(x)) {
-    //         // ES6 adds object into an object as a dictionary not an array of obejcts
-    //         Object.assign(parsedStatusUpdates, { [`${x}`]:badLines[j]})
-    //       }
-    //     }
-    //     return x;
-    //
-    //   });
-    //
-    //   console.log('lines with errors');
-    //   console.log(errorsForLines);
-    //
-    //   if (errorsForLines.includes(singleValue)) {
-    //     console.log(`found status update for singleValue ${singleValue}`);
-    //     console.log(parsedStatusUpdates[singleValue]);
-    //     singleResult = parsedStatusUpdates[singleValue];
-    //   } else {
-    //     singleResult = false;
-    //   }
-    //
-    //
-    //
-    // } else {
-    //    singleResult = false;
-    // }
-    //
-    // console.log('single result');
-    // console.log(singleResult);
-    //
-    // if (singleResult) {
-    //   fs.writeFile(`./public/data/${singleValue}_statusReport.json`, JSON.stringify(singleResult), err=>{
-    //     if (err) {
-    //       console.log(err);
-    //     }
-    //     console.log(`|--|--|--|--|--|--|--|--|--| Single Status File Written for ${singleValue} |--|--|--|--|--|--|--|--|--|`);
-    //
-    //   })
-    //
-    // } else {
-    //
-    //   fs.writeFile(`./public/data/${singleValue}_statusReport.json`, JSON.stringify({status: "GOOD SERVICE"}), err=>{
-    //     if (err) {
-    //       console.log(err);
-    //     }
-    //     console.log(`|--|--|--|--|--|--|--|--|--| EMPTY Single Status File Written for ${singleValue} |--|--|--|--|--|--|--|--|--|`);
-    //
-    //   });
+  gimme();
 
-    // }
+  // mta.status('subway').then(function(status){
+  //   console.log('resolve');
+  //   console.log(JSON.stringify(status));
 
-  });
-  //.catch(err=>console.log(err));
+  // for (statusItem of status) {
+  //   if (statusItem.status !== 'GOOD SERVICE') {
+  //     badLines.push(statusItem)
+  //   }
+  // }
+  //
+  // // Fire if their are lines with service updates
+  // if (badLines.length>0) {
+  //   console.log('bad lines exist');
+  //   // Service updates come in line bundles, we need to parse out the individual
+  //   // lines to be checked one by one
+  //   var effectedGroups = badLines.map(x=>{
+  //     return x.name
+  //   });
+  //
+  //   effectedLines = effectedGroups.join('').split('');
+  //
+  //   let parsedStatusUpdates = {};
+  //
+  //   var errorsForLines = effectedLines.map((x,i)=>{
+  //
+  //     for (var j = 0; j < effectedGroups.length; j++) {
+  //       let splitGroup = effectedGroups[j].split('');
+  //       if (splitGroup.includes(x)) {
+  //         // ES6 adds object into an object as a dictionary not an array of obejcts
+  //         Object.assign(parsedStatusUpdates, { [`${x}`]:badLines[j]})
+  //       }
+  //     }
+  //     return x;
+  //
+  //   });
+  //
+  //   console.log('lines with errors');
+  //   console.log(errorsForLines);
+  //
+  //   if (errorsForLines.includes(singleValue)) {
+  //     console.log(`found status update for singleValue ${singleValue}`);
+  //     console.log(parsedStatusUpdates[singleValue]);
+  //     singleResult = parsedStatusUpdates[singleValue];
+  //   } else {
+  //     singleResult = false;
+  //   }
+  //
+  //
+  //
+  // } else {
+  //    singleResult = false;
+  // }
+  //
+  // console.log('single result');
+  // console.log(singleResult);
+  //
+  // if (singleResult) {
+  //   fs.writeFile(`./public/data/${singleValue}_statusReport.json`, JSON.stringify(singleResult), err=>{
+  //     if (err) {
+  //       console.log(err);
+  //     }
+  //     console.log(`|--|--|--|--|--|--|--|--|--| Single Status File Written for ${singleValue} |--|--|--|--|--|--|--|--|--|`);
+  //
+  //   })
+  //
+  // } else {
+  //
+  //   fs.writeFile(`./public/data/${singleValue}_statusReport.json`, JSON.stringify({status: "GOOD SERVICE"}), err=>{
+  //     if (err) {
+  //       console.log(err);
+  //     }
+  //     console.log(`|--|--|--|--|--|--|--|--|--| EMPTY Single Status File Written for ${singleValue} |--|--|--|--|--|--|--|--|--|`);
+  //
+  //   });
+
+  // }
+
+  //}).catch(err=>console.log(err));
 
   mta.schedule(thisStop, thisFeed).then(function(result) {
 
@@ -367,7 +373,7 @@ app.get('/register', (req, res) => {
   tempLogin = '';
 
   res.render('register', {
-    tempLogin:tempLogin,
+    tempLogin: tempLogin,
     errMsg: ''
   });
 
@@ -380,11 +386,15 @@ app.post('/register', (req, res) => {
   let specialCharacters = /\W|_/g
 
   if (specialCharacters.test(username)) {
-    return res.render('register',{errMsg:'Special characters and spaces are not allowed in the username.'});
+    return res.render('register', {
+      errMsg: 'Special characters and spaces are not allowed in the username.'
+    });
   }
 
   if (req.body.password !== req.body.password2) {
-    return res.render('register',{errMsg:'Password confirmation did not match original'});
+    return res.render('register', {
+      errMsg: 'Password confirmation did not match original'
+    });
   }
 
   User.create({
@@ -411,7 +421,9 @@ app.get('/confirmation/:username&:password', (req, res) => {
 
 });
 
-app.post('/confirmation', passport.authenticate('local', { failureRedirect: '/login'}), (req, res) => {
+app.post('/confirmation', passport.authenticate('local', {
+  failureRedirect: '/login'
+}), (req, res) => {
 
   // Confirmation page functions as an intermediate step between new user
   // creation and login. I couldn't think of a way to do it on one page, so I
@@ -435,7 +447,7 @@ app.get('/login', (req, res) => {
   }
 
   res.render('login', {
-    tempLogin:tempLogin,
+    tempLogin: tempLogin,
     errMsg: errMsg
   });
 
@@ -504,7 +516,7 @@ app.post('/favorite', (req, res) => {
 
         // write static file for client reference
         fs.writeFile(`./public/data/${tempLogin}_favoriteStopTimes.json`, favs, (err) => {
-          console.log('-------------------------------------- New Static file for user '+ tempLogin +' for new favoirte ------------------------------------------');
+          console.log('-------------------------------------- New Static file for user ' + tempLogin + ' for new favoirte ------------------------------------------');
           if (err) {
             console.log(err);
           }
@@ -518,7 +530,7 @@ app.post('/favorite', (req, res) => {
 // Get index of favorite and splice it out of array of favorites, and then modify
 // the user data.
 
-app.post('/remove',(req,res)=>{
+app.post('/remove', (req, res) => {
   tempLogin = req.body.username;
   favIndex = req.body.favIndex;
 
@@ -528,20 +540,20 @@ app.post('/remove',(req,res)=>{
         $iLike: req.body.username
       }
     }
-  }).then(user=>{
+  }).then(user => {
     var oldFavorites = JSON.parse(user.dataValues.favorites);
     console.log(oldFavorites.favorites[favIndex]);
-    oldFavorites.favorites.splice(favIndex,1);
+    oldFavorites.favorites.splice(favIndex, 1);
     var newFavorites = oldFavorites
 
     user.updateAttributes({
 
       favorites: JSON.stringify(newFavorites)
 
-    }).then(()=>{
+    }).then(() => {
 
       fs.writeFile(`./public/data/${tempLogin}_favoriteStopTimes.json`, JSON.stringify(newFavorites), (err) => {
-        console.log('-------------------------------------- New Static file for user '+ tempLogin +' without erased favoirte ------------------------------------------');
+        console.log('-------------------------------------- New Static file for user ' + tempLogin + ' without erased favoirte ------------------------------------------');
         if (err) {
           console.log(err);
         }
@@ -553,16 +565,18 @@ app.post('/remove',(req,res)=>{
 
 });
 
-app.get('/get-stops',(req,res)=>{
+app.get('/get-stops', (req, res) => {
 
   // Full stop data for favorite selector
-  let stops = fs.readFileSync(`StaticData/FullSimple.json`, 'utf-8', function(err, result) { return result });
+  let stops = fs.readFileSync(`StaticData/FullSimple.json`, 'utf-8', function(err, result) {
+    return result
+  });
 
   res.send(stops);
 
 });
 
-app.post('/favorite-select',(req,res)=>{
+app.post('/favorite-select', (req, res) => {
 
   let line = req.body.line;
   let stopInfo = req.body.stops;
@@ -585,13 +599,13 @@ app.post('/favorite-select',(req,res)=>{
         $iLike: username
       }
     }
-  }).then(user=>{
+  }).then(user => {
     let oldFavorites = user.dataValues.favorites;
     newFavorites = JSON.parse(oldFavorites);
     newFavorites.favorites.push(newFav);
     user.updateAttributes({
       favorites: JSON.stringify(newFavorites)
-    }).then(()=>{
+    }).then(() => {
       res.redirect('/');
     })
 
