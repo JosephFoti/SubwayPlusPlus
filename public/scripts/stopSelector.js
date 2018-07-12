@@ -5,7 +5,7 @@ $('document').ready(function(){
 
   // get json from ajax
   $.ajax({
-    url:'./get-stops',
+    url:'../get-stops',
     success:function(result){
       console.log('i got the stops');
       stopData = JSON.parse(result);

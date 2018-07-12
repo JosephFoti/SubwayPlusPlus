@@ -8,7 +8,6 @@ const passport = require('passport');
 const { Client } = require('pg');
 const Strategy = require('passport-local').Strategy;
 const cookieParser = require('cookie-parser');
-const flash = require('connect-flash');
 
 const app = express();
 
@@ -17,7 +16,11 @@ const getFeed = require('./components/getFeed.js');
 const getFavs = require('./components/getFavTimes.js');
 const getService = require('./components/getService.js');
 
-getService.connectionTest();
+const dotenv = require('dotenv');
+const result = dotenv.config();
+
+const flash = require('connect-flash');
+app.use(flash());
 
 app.set('view engine', 'ejs');
 app.use(bodyParser.json());
@@ -25,12 +28,6 @@ app.use(bodyParser.urlencoded({
   extended: false
 }));
 app.use(express.static('public'));
-
-// flash, middleware for making cookies with error messages
-// app.use(express.session({cookie: {maxAge:60000}}));
-app.use(flash());
-// app.use(express.cookieParser('keyboard cat'));
-
 
 const Op = Sequelize.Op
 // const sequelize = new Sequelize('barkspace', postgres_user, postgres_pass, {
@@ -503,7 +500,13 @@ app.post('/favorite-select',(req,res)=>{
     user.updateAttributes({
       favorites: JSON.stringify(newFavorites)
     }).then(()=>{
-      res.redirect('/');
+
+      if (req.headers.referer.split('/').includes('profile')) {
+        res.redirect(`/profile/${req.user.username}`);
+      } else {
+        res.redirect('/');
+      }
+
     })
 
   })
@@ -517,6 +520,53 @@ app.post('/stopData', (req, res) => {
   clearInterval(dataPull);
 
 });
+
+app.get('/profile/:username', require('connect-ensure-login').ensureLoggedIn('/login'), (req,res)=>{
+
+  // get favs, list them in a container to be organized.
+
+  favorites = JSON.parse(req.user.favorites);
+
+  res.render('profile', {tempLogin:req.user.username,lineNames:lineNames, favorites:favorites.favorites});
+
+});
+
+app.post('/edit',(req,res)=>{
+  // Gets an array with the order of the re-arranged stops and maps a new
+  // array of favorite values to sortedFavs. Then we find the user's profile in
+  // postgress and update the order. NOTE need to update the static file.
+
+  let order = req.body['order[]'];
+  let favorites = JSON.parse(req.user.favorites);
+
+  let sortedFavs = order.map((x,i)=>{
+    for (favorite of favorites.favorites) {
+      if (favorite.stopId === x) {
+        return favorite;
+      }
+    }
+  });
+
+  let newData = {favorites:sortedFavs}
+
+  User.findOne({
+    where:{
+      username:{
+        $like:req.user.username
+      }
+    }
+  }).then(user=>{
+    user.updateAttributes({
+      favorites: JSON.stringify(newData)
+    }).then(x=>{
+      console.log('favorite data updated to');
+      console.log(x);
+    })
+  })
+
+  console.log(order);
+  console.log(sortedFavs);
+})
 
 // NOTE: Always check the PORT
 app.listen(8080, function(err) {

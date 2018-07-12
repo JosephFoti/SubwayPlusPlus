@@ -14,7 +14,7 @@ var status = function(favorites,tempLogin) {
 
     let badLines = [];
     mta.status('subway').then(function(status){
-      console.log(status);
+      // console.log(status);
 
       for (statusItem of status) {
         if (statusItem.status !== 'GOOD SERVICE') {
@@ -23,7 +23,7 @@ var status = function(favorites,tempLogin) {
       }
 
       console.log(badLines.length);
-      
+
       if (badLines.length>0) {
 
       var effectedGroups = badLines.map(x=>{

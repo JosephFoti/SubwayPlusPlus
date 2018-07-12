@@ -7,9 +7,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const Sequelize = require('sequelize')
 const passport = require('passport');
-const {
-  Client
-} = require('pg')
+const {Client} = require('pg')
 const Strategy = require('passport-local').Strategy;
 const cookieParser = require('cookie-parser');
 
@@ -18,6 +16,8 @@ const app = express();
 const stopFetch = require('./components/stopFetch.js');
 const getFeed = require('./components/getFeed.js');
 const getFavs = require('./components/getFavTimes.js');
+const getService = require('./components/getService.js');
+
 
 const dotenv = require('dotenv');
 const result = dotenv.config();
@@ -166,6 +166,8 @@ app.get('/', (req, res) => {
     // fetches the time information for user's selected favorites
     // and pushes them to a public data file for that user
     getFavs.getFavs(req);
+
+    getService.status(favs,tempLogin);
 
     return res.render('home', {
       favs: favs,
@@ -505,7 +507,13 @@ app.post('/favorite-select',(req,res)=>{
     user.updateAttributes({
       favorites: JSON.stringify(newFavorites)
     }).then(()=>{
-      res.redirect('/');
+
+      if (req.headers.referer.split('/').includes('profile')) {
+        res.redirect(`/profile/${req.user.username}`);
+      } else {
+        res.redirect('/');
+      }
+
     })
 
   })
@@ -519,6 +527,53 @@ app.post('/stopData', (req, res) => {
   clearInterval(dataPull);
 
 });
+
+app.get('/profile/:username', require('connect-ensure-login').ensureLoggedIn('/login'), (req,res)=>{
+
+  // get favs, list them in a container to be organized.
+
+  favorites = JSON.parse(req.user.favorites);
+
+  res.render('profile', {tempLogin:req.user.username,lineNames:lineNames, favorites:favorites.favorites});
+
+});
+
+app.post('/edit',(req,res)=>{
+  // Gets an array with the order of the re-arranged stops and maps a new
+  // array of favorite values to sortedFavs. Then we find the user's profile in
+  // postgress and update the order. NOTE need to update the static file.
+
+  let order = req.body['order[]'];
+  let favorites = JSON.parse(req.user.favorites);
+
+  let sortedFavs = order.map((x,i)=>{
+    for (favorite of favorites.favorites) {
+      if (favorite.stopId === x) {
+        return favorite;
+      }
+    }
+  });
+
+  let newData = {favorites:sortedFavs}
+
+  User.findOne({
+    where:{
+      username:{
+        $like:req.user.username
+      }
+    }
+  }).then(user=>{
+    user.updateAttributes({
+      favorites: JSON.stringify(newData)
+    }).then(x=>{
+      console.log('favorite data updated to');
+      console.log(x);
+    })
+  })
+
+  console.log(order);
+  console.log(sortedFavs);
+})
 
 // NOTE: Always check the PORT
 app.listen(PORT, function(err) {

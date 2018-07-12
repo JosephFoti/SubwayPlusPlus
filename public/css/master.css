@@ -14,7 +14,7 @@ body {
 }
 
 a.line-wrap {
-  width: calc(30% - 2px);
+  width: 30.33%;
   margin: 1.5%;
   float: left;
   text-align: center;

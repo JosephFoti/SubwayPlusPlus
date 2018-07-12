@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Profile | </title>
+
+    <link rel="stylesheet" href="/css/master.css">
+    <link rel="stylesheet" href="/css/editor.css">
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:300,400,700" rel="stylesheet">
+
+  </head>
+  <body>
+    <%- include partials/_navbar.ejs %>
+
+    <div class="hp-banner" style="height: 60px;border-bottom: 1px solid #828282;">
+    <h4>Use the module below to re-order your favorite stops and add new ones.</h4>
+    </div>
+
+
+
+    <div class="favorites-editor-wrapper">
+      <%- include partials/_favoriteSelector.ejs %>
+
+      <div class="favorites-container">
+
+        <% if (favorites.length>0) { %>
+          <% for (favorite of favorites) { %>
+            <div class="favorite-object line-type-<%= favorite.line %>" data-stopId=<%= favorite.stopId %>>
+              <span class="fav-line-name"><%= favorite.line %></span>
+              <span class="fav-stop-name"><%= favorite.stationName %></span>
+              <span class="remove-button">x</span>
+            </div>
+          <% } %>
+        <% } %>
+
+      </div>
+
+      <button type="submit" name="button" class="" id="editSubmit">Save Changes</button>
+
+    </div>
+
+  </body>
+  <footer>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.1/TweenMax.min.js"></script>
+    <script type="text/javascript" src="/scripts/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="/scripts/stopSelector.js"></script>
+    <script type="text/javascript" src="/scripts/draggableUI.js"></script>
+
+
+  </footer>
+</html>
