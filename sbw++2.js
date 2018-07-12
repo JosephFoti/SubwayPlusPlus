@@ -429,11 +429,11 @@ app.post('/favorite', (req, res) => {
 app.post('/remove',(req,res)=>{
   tempLogin = req.body.username;
   favIndex = req.body.favIndex;
-
+  console.log(req.user);
   User.findOne({
     where: {
       username: {
-        $iLike: req.body.username
+        $iLike: req.user.username
       }
     }
   }).then(user=>{
@@ -453,7 +453,13 @@ app.post('/remove',(req,res)=>{
         if (err) {
           console.log(err);
         }
-        return res.redirect('/');
+
+        if (req.headers.referer.split('/').includes('profile')) {
+          res.redirect(`/profile/${req.user.username}`);
+        } else {
+          res.redirect('/');
+        }
+        
       });
 
     })
@@ -556,17 +562,30 @@ app.post('/edit',(req,res)=>{
       }
     }
   }).then(user=>{
+
     user.updateAttributes({
       favorites: JSON.stringify(newData)
-    }).then(x=>{
-      console.log('favorite data updated to');
-      console.log(x);
+    }).then(()=>{
+
+      fs.writeFile(`./public/data/${req.user.username}_favoriteStopTimes.json`, JSON.stringify(newData), (err) => {
+        console.log('-------------------------------------- New Static file for user '+ req.user.username +' after re-order ------------------------------------------');
+        if (err) {
+          console.log(err);
+        }
+
+        var response = {
+          status  : 200,
+          success : 'Updated Successfully'
+        }
+
+        res.end(JSON.stringify(response));
+      });
+
     })
+
   })
 
-  console.log(order);
-  console.log(sortedFavs);
-})
+});
 
 // NOTE: Always check the PORT
 app.listen(8080, function(err) {

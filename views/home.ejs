@@ -15,7 +15,7 @@
       <div class="hp-banner no-favorites" style="height: 60px;border-bottom: 1px solid #828282;">
       <h4>Navigate to your favorite stops and click 'favorite' to have them display on your homepage</h4>
       </div>
-      
+
       <%- include partials/_favoriteSelector.ejs %>
 
     <% } else if (tempLogin.length === 0) { %>
@@ -37,6 +37,8 @@
     <% for (line of lineNames) { %>
       <a class="line-wrap" href=<%= `/lines/${line}`%> ><div class="line-name line-type-<%= line %>" data-line=<%= line %>><%= line %></div></a>
     <% } %>
+
+
 
   </body>
   <footer>

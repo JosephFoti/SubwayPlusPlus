@@ -17,6 +17,10 @@ span.fav-stop-name {
     cursor:move;
 }
 
+form.favorite-selector {
+  margin: 15px 0px;
+}
+
 span.fav-line-name {
     display: block;
     border: none;
@@ -47,4 +51,58 @@ span.fav-line-name {
   float:right;
   opacity: .3;
   cursor: default;
+}
+
+.alert-box {
+    width: 100vw;
+    position: fixed;
+    bottom: 0px;
+    height: 0px;
+    background: white;
+    border-top: 0px solid black;
+    padding: 0px 20px;
+    text-align: center;
+    color: #fa8288;
+    box-sizing: border-box;
+    box-shadow: 0px 0px 15px -1px #0000002b;
+
+}
+
+span.remove-button {
+    display: inline;
+    float: right;
+    margin-top: 4px;
+    padding: 10px;
+    font-size: 22px;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.double-check {
+  border-radius: 0px !important;
+  padding: 5px 10px;
+  background-color: white;
+  box-shadow: none;
+  border-color: black;
+  font-size: 15px;
+  text-transform: uppercase;
+  font-family: 'Roboto Condensed', sans-serif;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+@media screen and (max-width:786px) {
+
+  span.fav-line-name {
+      float: left;
+      margin: 0;
+      padding: 5px;
+  }
+
+  span.fav-stop-name {
+      margin-top: 12px;
+      padding-left: 10px;
+      text-overflow: ellipsis;
+  }
+
 }

@@ -27,20 +27,33 @@
       <div class="favorites-container">
 
         <% if (favorites.length>0) { %>
+          <% let i = 0; %>
           <% for (favorite of favorites) { %>
             <div class="favorite-object line-type-<%= favorite.line %>" data-stopId=<%= favorite.stopId %>>
               <span class="fav-line-name"><%= favorite.line %></span>
               <span class="fav-stop-name"><%= favorite.stationName %></span>
-              <span class="remove-button">x</span>
+              <span class="remove-button" data-index=<%= i %>>x</span>
             </div>
+          <% i++; %>
           <% } %>
+        <% } else { %>
+          <h3 style="text-align:center">Add a line with the drop down menus above to build out your custom MTA feed.</h3>
         <% } %>
 
       </div>
 
-      <button type="submit" name="button" class="" id="editSubmit">Save Changes</button>
+      <button type="button" name="button" class="" id="editSubmit">Save Changes</button>
 
     </div>
+
+    <div class="alert-box">
+      alert!
+
+    </div>
+
+    <form class="hidden-deleter" style="display:none;" action="/remove" method="post">
+      <input id="deleter-target" type="text" name="favIndex">
+    </form>
 
   </body>
   <footer>
