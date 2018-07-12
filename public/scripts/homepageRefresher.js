@@ -99,7 +99,7 @@ $(document).ready(function() {
         // console.log('checking result '+i)
         if (!result[i]['station']) {
           console.log('no station');
-          if (tries < 3) {
+          if (tries < 8) {
             let delay = 750 * tries;
             console.log('no data, reseting on try ' + tries);
             setTimeout(function() {

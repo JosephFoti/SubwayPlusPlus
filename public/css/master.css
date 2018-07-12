@@ -609,7 +609,7 @@ select {
 }
 
 .background-type-R, .background-type-W, .background-type-Q, .background-type-N {
-  background-color: #FA9B80 !important;
+  background-color: #FCDC76 !important;
 
 }
 
@@ -653,6 +653,7 @@ select {
   .fav-single {
       padding-left: 0px;
       padding-right: 0px;
+      margin-top: 20px;
   }
 
   h3.station-type {

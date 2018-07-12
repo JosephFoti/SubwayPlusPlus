@@ -53,6 +53,20 @@ span.fav-line-name {
   cursor: default;
 }
 
+#returnHome {
+  border-radius: 0px !important;
+  padding: 5px 10px;
+  background-color: white;
+  box-shadow: none;
+  border-color: black;
+  font-size: 15px;
+  text-transform: uppercase;
+  font-family: 'Roboto Condensed', sans-serif;
+  cursor: pointer;
+  margin-top: 13px;
+  float:left;
+}
+
 .alert-box {
     width: 100vw;
     position: fixed;

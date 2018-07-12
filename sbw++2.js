@@ -8,6 +8,7 @@ const passport = require('passport');
 const { Client } = require('pg');
 const Strategy = require('passport-local').Strategy;
 const cookieParser = require('cookie-parser');
+const bcrypt = require('bcrypt');
 
 const app = express();
 
@@ -87,7 +88,7 @@ passport.use(new Strategy(
     }).then(data => {
       if (!data) {
         return cb(null, false);
-      } else if (data.password !== password) {
+      } else if (!bcrypt.compareSync(password, data.password)) {
         return cb(null, false);
       }
       return cb(null, data);
@@ -295,9 +296,13 @@ app.post('/register', (req, res) => {
     return res.render('register',{errMsg:'Password confirmation did not match original'});
   }
 
+  // bcrypt
+  let encodedPassword = bcrypt.hashSync(req.body.password,2);
+  console.log(encodedPassword);
+
   User.create({
     username: req.body.username,
-    password: req.body.password,
+    password: encodedPassword,
     email: req.body.email,
     favorites: '{ "favorites": [] }'
 
@@ -459,7 +464,7 @@ app.post('/remove',(req,res)=>{
         } else {
           res.redirect('/');
         }
-        
+
       });
 
     })
