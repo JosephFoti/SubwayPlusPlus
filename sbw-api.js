@@ -8,9 +8,11 @@ const passport = require('passport');
 const { Client } = require('pg');
 const Strategy = require('passport-local').Strategy;
 const cookieParser = require('cookie-parser');
+const cors = require('cors');
 // const bcrypt = require('bcrypt');
 
 const app = express();
+app.use(cors());
 
 const stopFetch = require('./components/stopFetch.js');
 const getFeed = require('./components/getFeed.js');
@@ -163,17 +165,17 @@ app.get('/', (req, res) => {
 
     getService.status(favs,tempLogin);
 
-    return res.render('home', {
+    return res.send({
       favs: favs,
       lineNames: lineNames,
-      tempLogin: tempLogin
+      tempLogin: tempLogin,
     });
 
   }
-  return res.render('home', {
+  return res.send({
+    favs: false,
     lineNames: lineNames,
     tempLogin: tempLogin,
-    favs: false
   });
 });
 
@@ -202,7 +204,7 @@ var getStops = function(feedId, line, res) {
   fs.readFile(`StaticData/FullSimple.json`, 'utf-8', function(err, result) {
     let stops = JSON.parse(result);
 
-    return res.render('line', {
+    return res.send('line', {
       line: line,
       stops: stops[`line${line}`],
       feedId: feedId,
@@ -251,8 +253,7 @@ app.get('/stops/:stop&:feedId&:stationName&:line', (req, res) => {
     let station = stopFetch.fetch(thisStop, thisFeed, result);
     station.name = stationName;
 
-    return res.render('stop', {
-
+    return res.send({
       errorReport: '',
       station: station,
       stationName: stationName,
@@ -261,7 +262,6 @@ app.get('/stops/:stop&:feedId&:stationName&:line', (req, res) => {
       line: thisLine,
       username: username,
       tempLogin: username
-
     });
   }).catch(x => console.log(x));
 
