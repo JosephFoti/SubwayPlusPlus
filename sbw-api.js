@@ -138,7 +138,7 @@ let lineNames = ['1', '2', '3', '4', '5', '6', '7', 'A', 'B', 'C', 'D', 'E', 'F'
 var dataPull;
 
 // Home route displaying lines and user defined favoried stops
-app.get('/', (req, res) => {
+app.get('/home', (req, res) => {
 
   tempLogin = ''
 
@@ -181,7 +181,7 @@ app.get('/', (req, res) => {
 
 
 // Line page with designated line as parameter
-app.get('/lines/:line', (req, res) => {
+app.get('/line/:line', (req, res) => {
   var line = req.params.line;
 
   // references a swtch case for parsing the MTA feeds that correspond with
@@ -201,14 +201,15 @@ app.get('/lines/:line', (req, res) => {
 // On completion renders the line page
 var getStops = function(feedId, line, res) {
 
-  fs.readFile(`StaticData/FullSimple.json`, 'utf-8', function(err, result) {
+  fs.readFile(`StaticData/FullLinesObjects.json`, 'utf-8', function(err, result) {
     let stops = JSON.parse(result);
+    const temptempLogin = tempLogin || '';
 
-    return res.send('line', {
+    return res.send({
       line: line,
       stops: stops[`line${line}`],
       feedId: feedId,
-      tempLogin: tempLogin
+      tempLogin: temptempLogin,
     });
   });
 
@@ -227,6 +228,8 @@ app.get('/stops/:stop&:feedId&:stationName&:line', (req, res) => {
   let thisStop = req.params.stop.toString();
   let thisFeed = req.params.feedId.toString();
   let stationName = req.params.stationName.split('+').join(' ');
+
+  var feedId = getFeed.getFeedId(thisLine);
 
   // Get the stop and line from req params and use them to plug in the correct datapoint in the stops.json
   // data file. Use the data-tester to make a dictionary, use dictionary as href and call the stop.
@@ -265,9 +268,22 @@ app.get('/stops/:stop&:feedId&:stationName&:line', (req, res) => {
     });
   }).catch(x => console.log(x));
 
-
-
 });
+
+app.post('/stop', (req, res) => {
+    const { stopId, feedId } = req.body;
+
+    mta.schedule(stopId, feedId).then(result => {
+
+      if (!Object.keys(result).length) return res.send({error: 'Alas! No times are available'});
+
+      let station = stopFetch.fetch(stopId, feedId, result);
+
+      return res.send({
+        station: station
+      });
+    })
+})
 
 
 // route for registration page
@@ -590,6 +606,11 @@ app.post('/edit',(req,res)=>{
 
   })
 
+});
+
+app.post('/test', (req, res) => {
+  console.log(req.body.test);
+  res.send({response: 'yay'});
 });
 
 // NOTE: Always check the PORT
