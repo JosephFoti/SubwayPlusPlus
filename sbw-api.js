@@ -136,6 +136,7 @@ var mta = new Mta({
 // Static list of posible train lines
 let lineNames = ['1', '2', '3', '4', '5', '6', '7', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'J', 'L', 'M', 'N', 'Q', 'R', 'S', 'W', 'Z', 'SIR'];
 var dataPull;
+var tempLogin = '';
 
 // Home route displaying lines and user defined favoried stops
 app.get('/home', (req, res) => {
@@ -271,19 +272,25 @@ app.get('/stops/:stop&:feedId&:stationName&:line', (req, res) => {
 });
 
 app.post('/stop', (req, res) => {
-    const { stopId, feedId } = req.body;
+
+  const { line, stopId } = req.body;
+  const feedId = getFeed.getFeedId(line);
+  const response = Object.assign({}, req.body);
+
+  fs.readFile(`StaticData/FullLinesObjects.json`, 'utf-8', (err, result) => {
+    const lineStops = JSON.parse(result)[`line${line}`];
+    response.stopName = lineStops.filter(stop => stop.stopId === stopId)[0].stopName;
 
     mta.schedule(stopId, feedId).then(result => {
 
       if (!Object.keys(result).length) return res.send({error: 'Alas! No times are available'});
 
-      let station = stopFetch.fetch(stopId, feedId, result);
+      response.station = stopFetch.fetch(stopId, feedId, result);
 
-      return res.send({
-        station: station
-      });
-    })
-})
+      return res.send(response);
+    });
+  });
+});
 
 
 // route for registration page

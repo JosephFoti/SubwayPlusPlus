@@ -7,62 +7,48 @@ the favoried line to be written into
 
 */
 
-var stopFetch = function(thisStop, thisFeed, result, simple=false) {
+var stopFetch = function(thisStop, thisFeed, result, estimateNumber = 3) {
 
-  var station = [];
-  var estimates = [{"est":[]},{"est":[]}];
-  station[0] = {
-    data: result['schedule'][thisStop]["N"] || null
-  }
-  station[1] = {
-    data: result['schedule'][thisStop]["S"] || null
-  }
-  station[0].est = [];
-  station[1].est = [];
-  console.log(thisStop);
-
-  let time = new Date();
-  time = time.getTime();
-  if (station[0]['data']) {
-    for (let i = 0; i < 3; i++) {
-      if (station[0]['data'][i] && station[0]['data'][i]['departureTime']) {
-
-        let estCalc = (station[0]['data'][i]['departureTime']).toString() + '000';
-        estCalc = Math.floor((parseInt(estCalc) - time) / 60000);
-        if (estCalc < 0) {
-          estCalc = 0;
-        }
-        var routeAndEst = [estCalc,station[0]['data'][i]['routeId']]
-        station[0].est.push(estCalc);
-        estimates[0].est.push(routeAndEst);
-      }
+  const station = {
+    N: {
+      schedule: result.schedule[thisStop].N || undefined,
+      parsedArrivals: [],
+    },
+    S: {
+      schedule: result.schedule[thisStop].S || undefined,
+      parsedArrivals: [],
     }
-    console.log('uptown ' + estimates[0].est)
   }
 
+  const time = new Date().getTime();
 
-  if (station[1]['data']) {
-    for (let i = 0; i < 3; i++) {
-      if (station[1]['data'][i] && station[1]['data'][i]['departureTime']) {
-        let estCalc = (station[1]['data'][i]['departureTime']).toString() + '000';
-        estCalc = Math.floor((parseInt(estCalc) - time) / 60000);
-        if (estCalc < 0) {
-          estCalc = 0;
-        }
-        var routeAndEst = [estCalc,station[1]['data'][i]['routeId']]
-        station[1].est.push(estCalc);
-        estimates[1].est.push(routeAndEst);
-      }
+  if (station.N.schedule) {
+    for (let i = 0; i < estimateNumber; i++) {
+      const train = station.N.schedule[i]
+      if (!train || !train.departureTime) continue;
+
+      const estimate = train.departureTime * 1000;
+      const parsedEstimate = ((estimate - time) / 60000) > 0 ? Math.floor((estimate - time) / 60000) : 0;
+
+      station.N.parsedArrivals.push({estimate: parsedEstimate, line: train.routeId});
+      console.log('uptown ' + parsedEstimate);
     }
-    console.log('downtown ' + estimates[1].est)
   }
 
-if (simple) {
-  return estimates;
-}
+  if (station.S.schedule) {
+    for (let i = 0; i < estimateNumber; i++) {
+      const train = station.S.schedule[i]
+      if (!train || !train.departureTime) continue;
 
-return station;
+      const estimate = train.departureTime * 1000;
+      const parsedEstimate = ((estimate - time) / 60000) > 0 ? Math.floor((estimate - time) / 60000) : 0;
 
+      station.S.parsedArrivals.push({estimate: parsedEstimate, line: train.routeId});
+      console.log('downtown ' + parsedEstimate);
+    }
+  }
+
+  return station;
 }
 
 module.exports = {fetch:stopFetch}
